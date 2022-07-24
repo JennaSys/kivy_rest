@@ -27,20 +27,8 @@
                 # self here refers to the widget i.e FloatLayout
                 pos: self.pos
                 size: self.size
-
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: .1
-
-            Button:
-                text: 'Left Btn'
-                size_hint_x: .3
-                on_press: root.on_press_button()
-
-            Button:
-                text: 'Right Btn'
-                size_hint_x: .7
-                on_press: root.on_press_button()
+        MDList:
+            id: item_list
 
     Label:
         text: 'App Footer'
@@ -54,3 +42,17 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
+
+<Book>:
+    orientation: 'horizontal'
+    size_hint_y: None
+
+    Button:
+        text: 'Left Btn'
+        size_hint_x: .3
+        on_press: root.on_press_button()
+
+    Button:
+        text: 'Right Btn'
+        size_hint_x: .7
+        on_press: root.on_press_button()

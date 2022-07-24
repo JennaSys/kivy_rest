@@ -1,3 +1,4 @@
 Kivy~=2.1.0
+kivymd==0.104.2
 Cython~=0.29.19
 buildozer~=1.4.0

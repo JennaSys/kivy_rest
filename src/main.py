@@ -1,16 +1,27 @@
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
 
 
 class Window(GridLayout):
+    pass
+
+
+class Book(BoxLayout):
     @staticmethod
     def on_press_button():
         print('You pressed the button!')
 
 
-class MainApp(App):
+class MainApp(MDApp):
     def build(self):
-        return Window(rows=3)
+        window = Window(rows=3)
+
+        item_list = window.ids.item_list
+        for _ in range(20):
+            item_list.add_widget(Book())
+
+        return window
 
 
 if __name__ == '__main__':
