@@ -1,0 +1,31 @@
+#:kivy 2.1.0
+
+<Window>:
+    Label:
+        text: 'App Title'
+        size_hint_y: .1
+        halign: 'center'
+        background_color: 0, 1, 0, 1
+
+    AnchorLayout:
+        anchor_y: 'top'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+
+            Button:
+                text: 'Left Btn'
+                size_hint_x: .3
+                on_press: root.on_press_button()
+
+            Button:
+                text: 'Right Btn'
+                size_hint_x: .7
+                on_press: root.on_press_button()
+
+    Label:
+        text: 'App Footer'
+        halign: 'left'
+        size_hint_y: .1
+        background_color: 0, 0, 1, 1
