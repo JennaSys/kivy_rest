@@ -14,8 +14,12 @@
                 size: self.size
                 pos: self.pos
 
-    AnchorLayout:
-        anchor_y: 'top'
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        bar_width: 10
+        scroll_type: ['bars', 'content']
+
         canvas.before:
             Color:
                 rgba: 0, 1, 0, 1
