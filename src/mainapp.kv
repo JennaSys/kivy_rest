@@ -6,6 +6,11 @@ ScreenManager:
     LoginScreen:
         name: 'login'
 
+<MenuItem>:
+    IconLeftWidget:
+        icon: root.icon
+        pos_hint: {"center_y": .5}
+
 <BookEdit>:
     MDBoxLayout:
         orientation: "vertical"
@@ -49,16 +54,27 @@ ScreenManager:
             id: app_toolbar
             elevation: 10
             title: "All the Books"
-            left_action_items: [['plus-circle', app.handle_addnew, "Add new book"]]
             right_action_items: [["dots-vertical", lambda ref: app.menu_callback(ref)]]
 
-        ScrollView:
-            scroll_timeout : 100
+        FloatLayout:
+            ScrollView:
+                scroll_timeout : 100
+                pos: 0, 0
 
-            MDList:
-                id: booklist
-                adaptive_height: True
-                padding: 0
+                MDList:
+                    id: booklist
+                    adaptive_height: True
+                    padding: 0
+
+
+            MDFloatingActionButton:
+                icon: "plus-thick"
+    #            theme_text_color: "Custom"
+    #            text_color: [0,1,0,1]
+                md_bg_color: [1,0,0,1]
+                pos: root.width - self.width - dp(20), dp(20)
+                elevation: 10
+                on_release: root.handle_addnew()
 
 <Book>:
     size_hint_y: None

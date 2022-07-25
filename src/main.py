@@ -2,6 +2,7 @@ import json
 
 from kivymd.app import MDApp
 from kivymd.uix.card import MDCardSwipe
+from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.dialog import MDDialog
@@ -22,7 +23,9 @@ class LoginScreen(Screen):
 
 
 class BookList(Screen):
-    pass
+    def handle_addnew(self):
+        print(f"Add New!")
+        app.sm.get_screen('edit').open()
 
 
 class BookEdit(Screen):
@@ -58,7 +61,7 @@ class BookEdit(Screen):
             params['id'] = self.book_id
 
         cookie = app.session_cookie if app.session_cookie else ''
-        headers = {'Cookie':cookie, 'Content-type': 'application/json'}
+        headers = {'Cookie': cookie, 'Content-type': 'application/json'}
         rest_resource = "books" if self.book_id < 0 else f"books/{self.book_id}"
         req = UrlRequest(f"{REST_ENDPOINT}/{rest_resource}",
                          method='POST' if self.book_id < 0 else 'PUT',
@@ -138,6 +141,10 @@ class Book(MDCardSwipe):
             app.sm.get_screen('edit').open(book_id)
 
 
+class MenuItem(OneLineIconListItem):
+    icon = StringProperty()
+
+
 class MainApp(MDApp):
     sm = None
     menu = None
@@ -152,13 +159,16 @@ class MainApp(MDApp):
         self.title = "Books"
 
         self.sm = self.root
+
+        # TODO: Change menu to class
         self.menu = MDDropdownMenu(
-            items=[{"viewclass": "OneLineListItem",
+            items=[{"viewclass": "MenuItem",
                     "text": "Login",
-                    "height": dp(40),
+                    "icon": "login",
+                    "height": dp(48),
                     "on_release": self.login,
                     }],
-            width_mult=2,
+            width_mult=2.5,
         )
         self.sm.current = 'books'
 
@@ -200,11 +210,6 @@ class MainApp(MDApp):
                     Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
                 )
 
-    def handle_addnew(self, value):
-        # TODO: change to floating button
-        print(f"Add New!")
-        self.sm.get_screen('edit').open()
-
     def cancel_login(self):
         self.switch_screen('books')
 
@@ -223,9 +228,10 @@ class MainApp(MDApp):
                          on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
                          )
         self.session_cookie = None
-        self.menu.items = [{"viewclass": "OneLineListItem",
+        self.menu.items = [{"viewclass": "MenuItem",
                             "text": "Login",
-                            "height": dp(40),
+                            "icon": "login",
+                            "height": dp(48),
                             "on_release": self.login}]
 
     def do_login(self):
@@ -251,16 +257,16 @@ class MainApp(MDApp):
         self.session_cookie = request.resp_headers.get('Set-Cookie', None)
         Snackbar(text="Login successful!", bg_color=(0, .6, 0, 1)).open()
         self.switch_screen('books')
-        self.menu.items = [{"viewclass": "OneLineListItem",
+        self.menu.items = [{"viewclass": "MenuItem",
                             "text": "Logout",
-                            "height": dp(40),
+                            "icon": "logout",
+                            "height": dp(48),
                             "on_release": self.logout}]
 
 
 if __name__ == '__main__':
     app = MainApp()
     app.run()
-
 
 # TODO: Unify http error messages
 # TODO: Handle 401 (on_failure) with need to login message
