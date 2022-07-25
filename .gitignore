@@ -15,6 +15,7 @@ dist/
 .cache/
 .parcel-cache/
 .build/
+bin/
 .buildozer/
 node_modules/
 __pycache__/
