@@ -4,6 +4,8 @@ from kivymd.app import MDApp
 from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.snackbar import Snackbar
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
@@ -24,16 +26,37 @@ class BookList(Screen):
 
 
 class BookEdit(Screen):
-    def open(self, book_id):
+    book_id = NumericProperty()
+
+    def open(self, book_id=None):
         app.switch_screen('edit')
-        self.ids.title.text = "My Test Book"
-        self.ids.author.text = "All Me"
+        self.book_id = book_id if book_id else -1
+        if book_id:
+            req = UrlRequest(f"{REST_ENDPOINT}/books/{book_id}",
+                             on_success=self.load_data,
+                             timeout=5,
+                             on_failure=lambda rq, rp: print("Oops!"),
+                             on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
+                             )
+
+    def close(self, ref):
+        self.clear()
+        app.switch_screen('books')
+
+    def load_data(self, request, result):
+        book_data = result.get('book', None)
+        if book_data:
+            self.book_id = book_data['id']
+            self.ids.title.text = book_data['title']
+            self.ids.author.text = book_data['author']
 
     def do_save(self):
         print("Saving")
+        self.clear()
         app.switch_screen('books')
 
     def clear(self):
+        self.book_id = -1
         self.ids.title.text = ""
         self.ids.author.text = ""
 
@@ -43,13 +66,55 @@ class Book(MDCardSwipe):
     text = StringProperty()
     secondary_text = StringProperty()
 
+    dialog = None
+
+    def do_delete(self):
+        self.dialog.dismiss()
+        print(f"Delete {self.book_id}!")
+
+        req = UrlRequest(f"{REST_ENDPOINT}/books/{self.book_id}",
+                         method='DELETE',
+                         cookies=app.session_cookie,
+                         on_success=self.delete_success,
+                         timeout=5,
+                         on_failure=lambda rq, rp: print("Oops!"),
+                         on_error=lambda rq, rp: Snackbar(text=f"Server error: {rp}!", bg_color=(1, 0, 0, 1)).open()
+                         )
+
+    def delete_success(self, request, result):
+        Snackbar(text="Book deleted", bg_color=(0, .6, 0, 1)).open()
+        app.get_books()
+
+    def delete_dialog(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Delete Book",
+                text=f"Are you sure you want to permanently delete '{self.text}'?",
+                type='confirmation',
+                auto_dismiss=False,
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        text_color=app.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog.dismiss()
+                    ),
+                    MDFlatButton(
+                        text="DELETE",
+                        text_color=app.theme_cls.primary_color,
+                        on_release=lambda x: self.do_delete()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
     def handle_delete(self):
         if self.open_progress > 0.0:
-            print(f"Delete {self.book_id}!")
+            self.delete_dialog()
 
-    def handle_addnew(self):
+    def handle_edit(self, book_id):
         if self.open_progress == 0.0:
-            print(f"Add New!")
+            print("Edit book_id:", book_id)
+            app.sm.get_screen('edit').open(book_id)
 
 
 class MainApp(MDApp):
@@ -89,6 +154,15 @@ class MainApp(MDApp):
         self.sm.current = screen_name
 
     def on_start(self):
+        self.get_books()
+
+    def get_books(self):
+        books_screen = self.sm.get_screen('books')
+        books = [child for child in books_screen.ids.booklist.children]
+        for book in books:
+            if isinstance(book, Book):
+                books_screen.ids.booklist.remove_widget(book)
+
         req = UrlRequest(f"{REST_ENDPOINT}/books",
                          on_success=self.load_data,
                          timeout=5,
@@ -107,11 +181,7 @@ class MainApp(MDApp):
 
     def handle_addnew(self, value):
         print(f"Add New!")
-
-    def handle_edit(self, book_id):
-        print("Edit book_id:", book_id)
-        self.sm.get_screen('edit').open(book_id)
-
+        self.sm.get_screen('edit').open()
 
     def cancel_login(self):
         self.switch_screen('books')
@@ -124,7 +194,6 @@ class MainApp(MDApp):
         headers = {'Cookie': self.session_cookie, 'Accept': 'application/json'}
         req = UrlRequest(f"{REST_ENDPOINT}/logout",
                          req_headers=headers,
-                         cookies=[self.session_cookie],
                          on_success=lambda rq, rp: Snackbar(text="Logged out", bg_color=(0, .6, 0, 1)).open(),
                          timeout=5,
                          on_failure=lambda rq, rp: print("Oops!"),

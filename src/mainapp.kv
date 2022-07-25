@@ -15,14 +15,13 @@ ScreenManager:
         MDToolbar:
             id: app_toolbar
             elevation: 10
-            title: "Edit Book"
-            right_action_items: [["close", lambda ref: app.switch_screen('books')]]
+            title: f"Edit Book ({'New' if root.book_id < 0 else str(root.book_id)})"
+            right_action_items: [["close", root.close]]
 
-        MDCard:
-            orientation : 'vertical'
-
-            MDLabel:
-                id: book_id
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: [20]
+            spacing: 15
 
             MDTextField:
                 id: title
@@ -37,6 +36,8 @@ ScreenManager:
                 font_size: 12
                 pos_hint: {"center_x": 0.5}
                 on_release: root.do_save()
+
+            Widget:
 
 <BookList>:
     MDBoxLayout:
@@ -76,13 +77,13 @@ ScreenManager:
             id: content
             text: root.text
             secondary_text: root.secondary_text
-            on_release: app.handle_edit(root.book_id)
+            on_release: root.handle_edit(root.book_id)
 
             IconLeftWidget:
                 icon: "book-open"
                 theme_text_color: "Custom"
                 text_color: app.theme_cls.primary_light
-                on_release: app.handle_edit(root.book_id)
+                on_release: root.handle_edit(root.book_id)
 
 <LoginScreen>:
     MDCard
