@@ -3,12 +3,10 @@ from kivy.core.window import Window
 from kivy.properties import NumericProperty, StringProperty
 from kivymd.uix.card import MDCardSwipe
 
+from kivy.network.urlrequest import UrlRequest
 
-books = [('I Robot', 'Isaac Asimov'),
-                 ('React to Python', 'Sheehan'),
-                 ('Zen and the Art of Motorcycle Maintenance', 'Robert Pirsig'),
-                 ('Cosmos', 'Carl Sagan'),
-                 ('The Contrary Farmer', 'Gene Logsdon')]
+
+REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
 
 class Book(MDCardSwipe):
@@ -39,10 +37,23 @@ class MainApp(MDApp):
         self.title = "Book List"
 
     def on_start(self):
-        for book_id, book in enumerate(books):
-            self.root.ids.books.add_widget(
-                Book(book_id=book_id, text=book[0], secondary_text=book[1])
-            )
+        #     for book_id, book in enumerate(books):
+        #         self.root.ids.books.add_widget(
+        #             Book(book_id=book_id, text=book[0], secondary_text=book[1])
+        #         )
+        req = UrlRequest(f"{REST_ENDPOINT}/books",
+                         on_success=self.load_data,
+                         timeout=5,
+                         on_failure=lambda rq, rp: print("Oops!"),
+                         on_error=lambda rq, rp: print("Error!"))
+
+    def load_data(self, request, result):
+        books = result.get('books', None)
+        if books:
+            for book in books:
+                self.root.ids.books.add_widget(
+                    Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
+                )
 
     def handle_addnew(self, value):
         print(f"Add New!")
