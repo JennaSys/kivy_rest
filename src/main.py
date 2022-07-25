@@ -50,10 +50,31 @@ class BookEdit(Screen):
             self.ids.title.text = book_data['title']
             self.ids.author.text = book_data['author']
 
-    def do_save(self):
+    def handle_save(self):
         print("Saving")
+
+        params = {'title': self.ids.title.text, 'author': self.ids.author.text}
+        if self.book_id > 0:
+            params['id'] = self.book_id
+
+        cookie = app.session_cookie if app.session_cookie else ''
+        headers = {'Cookie':cookie, 'Content-type': 'application/json'}
+        rest_resource = "books" if self.book_id < 0 else f"books/{self.book_id}"
+        req = UrlRequest(f"{REST_ENDPOINT}/{rest_resource}",
+                         method='POST' if self.book_id < 0 else 'PUT',
+                         req_body=json.dumps(params),
+                         req_headers=headers,
+                         on_success=self.save_success,
+                         timeout=5,
+                         on_failure=lambda rq, rp: print("Oops!"),
+                         on_error=lambda rq, rp: Snackbar(text=f"Server error: {rp}!", bg_color=(1, 0, 0, 1)).open()
+                         )
+
+    def save_success(self, request, result):
+        Snackbar(text=f"Book {'added' if self.book_id < 0 else 'updated'}!", bg_color=(0, .6, 0, 1)).open()
         self.clear()
         app.switch_screen('books')
+        app.get_books()
 
     def clear(self):
         self.book_id = -1
@@ -74,7 +95,7 @@ class Book(MDCardSwipe):
 
         req = UrlRequest(f"{REST_ENDPOINT}/books/{self.book_id}",
                          method='DELETE',
-                         cookies=app.session_cookie,
+                         cookies=app.session_cookie if app.session_cookie else '',
                          on_success=self.delete_success,
                          timeout=5,
                          on_failure=lambda rq, rp: print("Oops!"),
@@ -180,6 +201,7 @@ class MainApp(MDApp):
                 )
 
     def handle_addnew(self, value):
+        # TODO: change to floating button
         print(f"Add New!")
         self.sm.get_screen('edit').open()
 
@@ -191,7 +213,8 @@ class MainApp(MDApp):
 
     def logout(self):
         self.menu.dismiss()
-        headers = {'Cookie': self.session_cookie, 'Accept': 'application/json'}
+        cookie = self.session_cookie if app.session_cookie else ''
+        headers = {'Cookie': cookie, 'Accept': 'application/json'}
         req = UrlRequest(f"{REST_ENDPOINT}/logout",
                          req_headers=headers,
                          on_success=lambda rq, rp: Snackbar(text="Logged out", bg_color=(0, .6, 0, 1)).open(),
@@ -210,11 +233,11 @@ class MainApp(MDApp):
         username = login_screen.ids.username.text
         password = login_screen.ids.password.text
 
-        params = json.dumps({'username': username, 'password': password})
+        params = {'username': username, 'password': password}
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         req = UrlRequest(f"{REST_ENDPOINT}/login",
                          method='POST',
-                         req_body=params,
+                         req_body=json.dumps(params),
                          req_headers=headers,
                          on_success=self.login_success,
                          timeout=5,
@@ -237,3 +260,8 @@ class MainApp(MDApp):
 if __name__ == '__main__':
     app = MainApp()
     app.run()
+
+
+# TODO: Unify http error messages
+# TODO: Handle 401 (on_failure) with need to login message
+# TODO: Create convenience function for http requests
