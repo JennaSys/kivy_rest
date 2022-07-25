@@ -278,3 +278,4 @@ if __name__ == '__main__':
 # TODO: Window size based on platform?
 
 # TODO: Add menu item to set (and locally save) rest endpoint
+# TODO: Add About screen showing version/build date/JennaSys
