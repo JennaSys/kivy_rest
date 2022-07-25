@@ -154,13 +154,10 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
-        # Window.size = (300, 400)
-        Window.size = (400, 600)
+        # Window.size = (400, 600)
         self.title = "Books"
 
         self.sm = self.root
-
-        # TODO: Change menu to class
         self.menu = MDDropdownMenu(
             items=[{"viewclass": "MenuItem",
                     "text": "Login",
@@ -268,6 +265,14 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
+
+# TODO: Refactor module into views/functionality
+# TODO: Change app.menu to class
+
 # TODO: Unify http error messages
 # TODO: Handle 401 (on_failure) with need to login message
 # TODO: Create convenience function for http requests
+
+# TODO: Get rid of all hard coded pixel sizing
+# TODO: Make slide out easier on mobile (get rid of icon click?)
+# TODO: Window size based on platform?
