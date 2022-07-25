@@ -44,6 +44,7 @@ class Book(MDCardSwipe):
 class MainApp(MDApp):
     sm = None
     menu = None
+    session_cookie = None
 
     def build(self):
         self.theme_cls.theme_style = "Light"
@@ -104,13 +105,16 @@ class MainApp(MDApp):
 
     def logout(self):
         self.menu.dismiss()
+        headers = {'Cookie': self.session_cookie, 'Accept': 'application/json'}
         req = UrlRequest(f"{REST_ENDPOINT}/logout",
-                         req_headers={'Accept: application/json'},
-                         on_success=self.load_data,
+                         req_headers=headers,
+                         cookies=[self.session_cookie],
+                         on_success=lambda rq, rp: Snackbar(text="Logged out", bg_color=(0, .6, 0, 1)).open(),
                          timeout=5,
                          on_failure=lambda rq, rp: print("Oops!"),
                          on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
                          )
+        self.session_cookie = None
         self.menu.items = [{"viewclass": "OneLineListItem",
                             "text": "Login",
                             "height": dp(40),
@@ -122,7 +126,7 @@ class MainApp(MDApp):
         password = login_screen.ids.password.text
 
         params = json.dumps({'username': username, 'password': password})
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         req = UrlRequest(f"{REST_ENDPOINT}/login",
                          method='POST',
                          req_body=params,
@@ -135,7 +139,8 @@ class MainApp(MDApp):
 
         login_screen.clear()
 
-    def login_success(self, request, response):
+    def login_success(self, request, result):
+        self.session_cookie = request.resp_headers.get('Set-Cookie', None)
         Snackbar(text="Login successful!", bg_color=(0, .6, 0, 1)).open()
         self.switch_screen('books')
         self.menu.items = [{"viewclass": "OneLineListItem",
