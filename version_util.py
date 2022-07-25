@@ -45,6 +45,8 @@ def update_local(semver):
 
 
 def main():
+    # Usage: py -m version_util patch
+
     if len(sys.argv) > 1:
         level_name = sys.argv[1]
         if level_name in levels:
