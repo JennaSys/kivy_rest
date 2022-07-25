@@ -23,14 +23,25 @@ class BookList(Screen):
     pass
 
 
+class BookEdit(Screen):
+    def open(self, book_id):
+        app.switch_screen('edit')
+        self.ids.title.text = "My Test Book"
+        self.ids.author.text = "All Me"
+
+    def do_save(self):
+        print("Saving")
+        app.switch_screen('books')
+
+    def clear(self):
+        self.ids.title.text = ""
+        self.ids.author.text = ""
+
+
 class Book(MDCardSwipe):
     book_id = NumericProperty()
     text = StringProperty()
     secondary_text = StringProperty()
-
-    def handle_select(self):
-        if self.open_progress == 0.0:
-            print(f"Clicked {self.book_id}!")
 
     def handle_delete(self):
         if self.open_progress > 0.0:
@@ -71,7 +82,7 @@ class MainApp(MDApp):
 
     def switch_screen(self, screen_name='books'):
         self.menu.dismiss()
-        if screen_name == 'login':
+        if screen_name == 'login' or self.sm.current == 'edit':
             self.sm.transition.direction = 'right'
         else:
             self.sm.transition.direction = 'left'
@@ -96,6 +107,11 @@ class MainApp(MDApp):
 
     def handle_addnew(self, value):
         print(f"Add New!")
+
+    def handle_edit(self, book_id):
+        print("Edit book_id:", book_id)
+        self.sm.get_screen('edit').open(book_id)
+
 
     def cancel_login(self):
         self.switch_screen('books')
