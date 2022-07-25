@@ -276,3 +276,5 @@ if __name__ == '__main__':
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Make slide out easier on mobile (get rid of icon click?)
 # TODO: Window size based on platform?
+
+# TODO: Add menu item to set (and locally save) rest endpoint
