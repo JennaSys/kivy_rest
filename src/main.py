@@ -1,11 +1,14 @@
 import json
 
 from kivymd.app import MDApp
+from kivymd.uix.card import MDCardSwipe
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.snackbar import Snackbar
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
-from kivymd.uix.card import MDCard, MDCardSwipe
 from kivy.network.urlrequest import UrlRequest
+from kivy.metrics import dp
 
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
@@ -40,6 +43,7 @@ class Book(MDCardSwipe):
 
 class MainApp(MDApp):
     sm = None
+    menu = None
 
     def build(self):
         self.theme_cls.theme_style = "Light"
@@ -47,20 +51,38 @@ class MainApp(MDApp):
         self.theme_cls.accent_palette = "Pink"
         # Window.size = (300, 400)
         Window.size = (400, 600)
-        self.title = "Books Demo"
+        self.title = "Books"
+
+        self.sm = self.root
+        self.menu = MDDropdownMenu(
+            items=[{"viewclass": "OneLineListItem",
+                    "text": "Login",
+                    "height": dp(40),
+                    "on_release": self.login,
+                    }],
+            width_mult=2,
+        )
+        self.sm.current = 'books'
+
+    def menu_callback(self, ref):
+        self.menu.caller = ref
+        self.menu.open()
 
     def switch_screen(self, screen_name='books'):
+        self.menu.dismiss()
+        if screen_name == 'login':
+            self.sm.transition.direction = 'right'
+        else:
+            self.sm.transition.direction = 'left'
         self.sm.current = screen_name
 
     def on_start(self):
-        self.sm = self.root
-        self.sm.current = 'books'
-
         req = UrlRequest(f"{REST_ENDPOINT}/books",
                          on_success=self.load_data,
                          timeout=5,
                          on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: print("Error!"))
+                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
+                         )
 
     def load_data(self, request, result):
         book_data = result.get('books', None)
@@ -73,23 +95,53 @@ class MainApp(MDApp):
 
     def handle_addnew(self, value):
         print(f"Add New!")
-        self.sm.current = 'login'
+
+    def cancel_login(self):
+        self.switch_screen('books')
+
+    def login(self):
+        self.switch_screen('login')
+
+    def logout(self):
+        self.menu.dismiss()
+        req = UrlRequest(f"{REST_ENDPOINT}/logout",
+                         req_headers={'Accept: application/json'},
+                         on_success=self.load_data,
+                         timeout=5,
+                         on_failure=lambda rq, rp: print("Oops!"),
+                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
+                         )
+        self.menu.items = [{"viewclass": "OneLineListItem",
+                            "text": "Login",
+                            "height": dp(40),
+                            "on_release": self.login}]
 
     def do_login(self):
-        print("Login")
         login_screen = self.sm.get_screen('login')
         username = login_screen.ids.username.text
         password = login_screen.ids.password.text
+
         params = json.dumps({'username': username, 'password': password})
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         req = UrlRequest(f"{REST_ENDPOINT}/login",
                          method='POST',
                          req_body=params,
                          req_headers=headers,
-                         on_success=lambda rq, rp: self.switch_screen(),
+                         on_success=self.login_success,
                          timeout=5,
-                         on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: print("Error!"))
+                         on_failure=lambda rq, rp: Snackbar(text="Login failed!", bg_color=(1, 0, 0, 1)).open(),
+                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
+                         )
+
+        login_screen.clear()
+
+    def login_success(self, request, response):
+        Snackbar(text="Login successful!", bg_color=(0, .6, 0, 1)).open()
+        self.switch_screen('books')
+        self.menu.items = [{"viewclass": "OneLineListItem",
+                            "text": "Logout",
+                            "height": dp(40),
+                            "on_release": self.logout}]
 
 
 if __name__ == '__main__':

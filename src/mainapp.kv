@@ -11,9 +11,11 @@ ScreenManager:
         spacing: "10dp"
 
         MDToolbar:
+            id: app_toolbar
             elevation: 10
             title: "All the Books"
-            right_action_items: [['plus-circle', app.handle_addnew, "Add new book"]]
+            left_action_items: [['plus-circle', app.handle_addnew, "Add new book"]]
+            right_action_items: [["dots-vertical", lambda ref: app.menu_callback(ref)]]
 
         ScrollView:
             scroll_timeout : 100
@@ -56,21 +58,30 @@ ScreenManager:
         elevation: 10
         padding: 25
         spacing: 25
+        border_radius: 20
+        radius: [15]
         orientation: 'vertical'
 
+        MDIconButton:
+            icon: 'close'
+            pos_hint: {"right": 1}
+            on_release: app.cancel_login()
+
         MDLabel:
-            id: welcome_label
-            text: "WELCOME"
+            text: "LOGIN"
             font_size: 40
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: 15
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.primary_color
 
         MDTextFieldRound:
             id: username
-            hint_text: "username"
+            hint_text: "User Name"
             icon_right: "account"
+            normal_color: app.theme_cls.primary_light
             size_hint_x: None
             width: 200
             font_size: 18
@@ -78,8 +89,9 @@ ScreenManager:
 
         MDTextFieldRound:
             id: password
-            hint_text: "password"
+            hint_text: "Password"
             icon_right: "eye-off"
+            normal_color: app.theme_cls.primary_light
             size_hint_x: None
             width: 200
             font_size: 18
@@ -90,13 +102,7 @@ ScreenManager:
             text: "LOG IN"
             font_size: 12
             pos_hint: {"center_x": 0.5}
-            on_press: app.do_login()
-
-        MDRoundFlatButton:
-            text: "CLEAR"
-            font_size: 12
-            pos_hint: {"center_x": 0.5}
-            on_press: root.clear()
+            on_release: app.do_login()
 
         Widget:
             size_hint_y: None
