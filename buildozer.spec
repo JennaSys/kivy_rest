@@ -29,11 +29,11 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+#version = 0.1
 
 # (str) Application versioning (method 2)
 #version.regex = __version__ = ['"](.*)['"]
-version.regex = __version__ = '(\d\.\d{1,2}\.\d{1,2})'
+version.regex = __version__ = ['"](\d\.\d{1,2}\.\d{1,2})['"]
 version.filename = %(source.dir)s/version.py
 
 # (list) Application requirements
