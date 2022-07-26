@@ -247,10 +247,9 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-# TODO: Refactor module into views/functionality
 
 # TODO: Get rid of all hard coded pixel sizing
-# TODO: Make slide out easier on mobile (get rid of icon click?)
-
-# TODO: Add menu item to set (and locally save) rest endpoint
+# TODO: Refactor module into views/functionality
+# TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)
 # TODO: Add About screen showing version/build date/JennaSys
+# TODO: Make slide out easier on mobile (get rid of icon click?)
