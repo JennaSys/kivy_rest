@@ -240,11 +240,12 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
+
 # TODO: Refactor module into views/functionality
+# TODO: Refactor dialog to reusable class
 
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Make slide out easier on mobile (get rid of icon click?)
-# TODO: Change startup splash icon
 
 # TODO: Add menu item to set (and locally save) rest endpoint
 # TODO: Add About screen showing version/build date/JennaSys
