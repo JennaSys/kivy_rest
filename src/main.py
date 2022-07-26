@@ -1,17 +1,15 @@
-import json
-
 from kivymd.app import MDApp
 from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
-from kivy.network.urlrequest import UrlRequest
 from kivy.metrics import dp
+
+from apputils import fetch, Notify
 
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
@@ -35,12 +33,7 @@ class BookEdit(Screen):
         app.switch_screen('edit')
         self.book_id = book_id if book_id else -1
         if book_id:
-            req = UrlRequest(f"{REST_ENDPOINT}/books/{book_id}",
-                             on_success=self.load_data,
-                             timeout=5,
-                             on_failure=lambda rq, rp: print("Oops!"),
-                             on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
-                             )
+            fetch(f"{REST_ENDPOINT}/books/{book_id}", self.load_data)
 
     def close(self, ref):
         self.clear()
@@ -56,25 +49,16 @@ class BookEdit(Screen):
     def handle_save(self):
         print("Saving")
 
-        params = {'title': self.ids.title.text, 'author': self.ids.author.text}
+        body = {'title': self.ids.title.text, 'author': self.ids.author.text}
         if self.book_id > 0:
-            params['id'] = self.book_id
+            body['id'] = self.book_id
 
-        cookie = app.session_cookie if app.session_cookie else ''
-        headers = {'Cookie': cookie, 'Content-type': 'application/json'}
         rest_resource = "books" if self.book_id < 0 else f"books/{self.book_id}"
-        req = UrlRequest(f"{REST_ENDPOINT}/{rest_resource}",
-                         method='POST' if self.book_id < 0 else 'PUT',
-                         req_body=json.dumps(params),
-                         req_headers=headers,
-                         on_success=self.save_success,
-                         timeout=5,
-                         on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: Snackbar(text=f"Server error: {rp}!", bg_color=(1, 0, 0, 1)).open()
-                         )
+        method = 'POST' if self.book_id < 0 else 'PUT'
+        fetch(f"{REST_ENDPOINT}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
 
     def save_success(self, request, result):
-        Snackbar(text=f"Book {'added' if self.book_id < 0 else 'updated'}!", bg_color=(0, .6, 0, 1)).open()
+        Notify(text=f"Book {'added' if self.book_id < 0 else 'updated'}").open()
         self.clear()
         app.switch_screen('books')
         app.get_books()
@@ -95,18 +79,10 @@ class Book(MDCardSwipe):
     def do_delete(self):
         self.dialog.dismiss()
         print(f"Delete {self.book_id}!")
-
-        req = UrlRequest(f"{REST_ENDPOINT}/books/{self.book_id}",
-                         method='DELETE',
-                         cookies=app.session_cookie if app.session_cookie else '',
-                         on_success=self.delete_success,
-                         timeout=5,
-                         on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: Snackbar(text=f"Server error: {rp}!", bg_color=(1, 0, 0, 1)).open()
-                         )
+        fetch(f"{REST_ENDPOINT}/books/{self.book_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
 
     def delete_success(self, request, result):
-        Snackbar(text="Book deleted", bg_color=(0, .6, 0, 1)).open()
+        Notify(text="Book deleted").open()
         app.get_books()
 
     def delete_dialog(self):
@@ -191,12 +167,7 @@ class MainApp(MDApp):
             if isinstance(book, Book):
                 books_screen.ids.booklist.remove_widget(book)
 
-        req = UrlRequest(f"{REST_ENDPOINT}/books",
-                         on_success=self.load_data,
-                         timeout=5,
-                         on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
-                         )
+        fetch(f"{REST_ENDPOINT}/books", self.load_data)
 
     def load_data(self, request, result):
         book_data = result.get('books', None)
@@ -215,15 +186,12 @@ class MainApp(MDApp):
 
     def logout(self):
         self.menu.dismiss()
-        cookie = self.session_cookie if app.session_cookie else ''
-        headers = {'Cookie': cookie, 'Accept': 'application/json'}
-        req = UrlRequest(f"{REST_ENDPOINT}/logout",
-                         req_headers=headers,
-                         on_success=lambda rq, rp: Snackbar(text="Logged out", bg_color=(0, .6, 0, 1)).open(),
-                         timeout=5,
-                         on_failure=lambda rq, rp: print("Oops!"),
-                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
-                         )
+
+        def on_success(request, result):
+            Notify(text="Logged out").open()
+
+        fetch(f"{REST_ENDPOINT}/logout", on_success, cookie=self.session_cookie)
+
         self.session_cookie = None
         self.menu.items = [{"viewclass": "MenuItem",
                             "text": "Login",
@@ -236,23 +204,17 @@ class MainApp(MDApp):
         username = login_screen.ids.username.text
         password = login_screen.ids.password.text
 
-        params = {'username': username, 'password': password}
-        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        req = UrlRequest(f"{REST_ENDPOINT}/login",
-                         method='POST',
-                         req_body=json.dumps(params),
-                         req_headers=headers,
-                         on_success=self.login_success,
-                         timeout=5,
-                         on_failure=lambda rq, rp: Snackbar(text="Login failed!", bg_color=(1, 0, 0, 1)).open(),
-                         on_error=lambda rq, rp: Snackbar(text="Server error!", bg_color=(1, 0, 0, 1)).open()
-                         )
+        def login_error(request, result):
+            Notify(text="Login failed!", snack_type='error').open()
+
+        body = {'username': username, 'password': password}
+        fetch(f"{REST_ENDPOINT}/login", self.login_success, method='POST', data=body, onError=login_error)
 
         login_screen.clear()
 
     def login_success(self, request, result):
         self.session_cookie = request.resp_headers.get('Set-Cookie', None)
-        Snackbar(text="Login successful!", bg_color=(0, .6, 0, 1)).open()
+        Notify(text="Login successful!").open()
         self.switch_screen('books')
         self.menu.items = [{"viewclass": "MenuItem",
                             "text": "Logout",
@@ -265,13 +227,8 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-
 # TODO: Refactor module into views/functionality
 # TODO: Change app.menu to class
-
-# TODO: Unify http error messages
-# TODO: Handle 401 (on_failure) with need to login message
-# TODO: Create convenience function for http requests
 
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Make slide out easier on mobile (get rid of icon click?)
@@ -279,4 +236,5 @@ if __name__ == '__main__':
 # TODO: Change startup splash icon
 
 # TODO: Add menu item to set (and locally save) rest endpoint
+# TODO: Add menu item to reload list
 # TODO: Add About screen showing version/build date/JennaSys
