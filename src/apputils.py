@@ -5,7 +5,7 @@ from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.snackbar import Snackbar
 
 
-TIMEOUT = 5
+URL_TIMEOUT = 5
 
 
 class Notify(Snackbar):
@@ -27,7 +27,7 @@ def fetch(url, callback=None, **kwargs):
     try:
         req_args = {'url': url if len(params) == 0 else f"{url}{params}",
                     'method': method,
-                    'timeout': TIMEOUT,
+                    'timeout': URL_TIMEOUT,
                     'on_failure': on_error if on_error else request_error,
                     'on_error': request_error
                     }

@@ -8,6 +8,7 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
 from kivy.metrics import dp
+from kivy.utils import platform
 
 from apputils import fetch, Notify
 
@@ -18,6 +19,28 @@ class LoginScreen(Screen):
     def clear(self):
         self.ids.username.text = ""
         self.ids.password.text = ""
+
+
+class AppMenu(MDDropdownMenu):
+    def __init__(self):
+        self.items = []
+        self.add_item(id="refresh", text="Refresh", icon="reload", on_release=app.get_books)
+        self.add_item(id="login", text="Login", icon="login", on_release=app.login)
+
+        super().__init__(items=self.items, width_mult=2.5)
+
+    def add_item(self, **kwargs):
+        base_item = {"viewclass": "MenuItem",
+                     "text": "",
+                     "icon": "",
+                     "height": dp(48),
+                     "on_release": None,
+                     }
+        base_item.update(kwargs)
+        self.items.append(base_item)
+
+    def remove_item(self, item_id):
+        self.items = [item for item in self.items if item['id'] != item_id]
 
 
 class BookList(Screen):
@@ -130,19 +153,12 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
-        # Window.size = (400, 600)
+        if platform in ['win', 'linux', 'macosx']:
+            Window.size = (400, 600)
         self.title = "Books"
 
+        self.menu = AppMenu()
         self.sm = self.root
-        self.menu = MDDropdownMenu(
-            items=[{"viewclass": "MenuItem",
-                    "text": "Login",
-                    "icon": "login",
-                    "height": dp(48),
-                    "on_release": self.login,
-                    }],
-            width_mult=2.5,
-        )
         self.sm.current = 'books'
 
     def menu_callback(self, ref):
@@ -193,11 +209,9 @@ class MainApp(MDApp):
         fetch(f"{REST_ENDPOINT}/logout", on_success, cookie=self.session_cookie)
 
         self.session_cookie = None
-        self.menu.items = [{"viewclass": "MenuItem",
-                            "text": "Login",
-                            "icon": "login",
-                            "height": dp(48),
-                            "on_release": self.login}]
+
+        self.menu.add_item(id="login", text="Login", icon="login", on_release=self.login)
+        self.menu.remove_item('logout')
 
     def do_login(self):
         login_screen = self.sm.get_screen('login')
@@ -216,11 +230,9 @@ class MainApp(MDApp):
         self.session_cookie = request.resp_headers.get('Set-Cookie', None)
         Notify(text="Login successful!").open()
         self.switch_screen('books')
-        self.menu.items = [{"viewclass": "MenuItem",
-                            "text": "Logout",
-                            "icon": "logout",
-                            "height": dp(48),
-                            "on_release": self.logout}]
+
+        self.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.logout)
+        self.menu.remove_item('login')
 
 
 if __name__ == '__main__':
@@ -228,13 +240,10 @@ if __name__ == '__main__':
     app.run()
 
 # TODO: Refactor module into views/functionality
-# TODO: Change app.menu to class
 
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Make slide out easier on mobile (get rid of icon click?)
-# TODO: Window size based on platform?
 # TODO: Change startup splash icon
 
 # TODO: Add menu item to set (and locally save) rest endpoint
-# TODO: Add menu item to reload list
 # TODO: Add About screen showing version/build date/JennaSys
