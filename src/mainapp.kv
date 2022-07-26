@@ -1,3 +1,5 @@
+#:import LoginScreen View.LoginScreen
+
 ScreenManager:
     BookList:
         name: 'books'
@@ -100,61 +102,3 @@ ScreenManager:
                 theme_text_color: "Custom"
                 text_color: app.theme_cls.primary_light
                 on_release: root.handle_edit(root.book_id)
-
-<LoginScreen>:
-    MDCard
-        size_hint: None, None
-        size: 300, 400
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 25
-        spacing: 25
-        border_radius: 20
-        radius: [15]
-        orientation: 'vertical'
-
-        MDIconButton:
-            icon: 'close'
-            pos_hint: {"right": 1}
-            on_release: app.cancel_login()
-
-        MDLabel:
-            text: "LOGIN"
-            font_size: 40
-            halign: 'center'
-            size_hint_y: None
-            height: self.texture_size[1]
-            padding_y: 15
-            theme_text_color: 'Custom'
-            text_color: app.theme_cls.primary_color
-
-        MDTextFieldRound:
-            id: username
-            hint_text: "User Name"
-            icon_right: "account"
-            normal_color: app.theme_cls.primary_light
-            size_hint_x: None
-            width: 200
-            font_size: 18
-            pos_hint: {"center_x": 0.5}
-
-        MDTextFieldRound:
-            id: password
-            hint_text: "Password"
-            icon_right: "eye-off"
-            normal_color: app.theme_cls.primary_light
-            size_hint_x: None
-            width: 200
-            font_size: 18
-            pos_hint: {"center_x": 0.5}
-            password: True
-
-        MDRoundFlatButton:
-            text: "LOG IN"
-            font_size: 12
-            pos_hint: {"center_x": 0.5}
-            on_release: app.do_login()
-
-        Widget:
-            size_hint_y: None
-            height: 10

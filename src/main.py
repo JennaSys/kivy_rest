@@ -12,13 +12,9 @@ from kivy.utils import platform
 
 from apputils import fetch, Notify
 
+
+
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
-
-
-class LoginScreen(Screen):
-    def clear(self):
-        self.ids.username.text = ""
-        self.ids.password.text = ""
 
 
 class AppMenu(MDDropdownMenu):
@@ -250,6 +246,8 @@ if __name__ == '__main__':
 
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Refactor module into views/functionality
+# TODO: Android app locks on exit
+# TODO: Add is_auth() using ping, and disable save/add/del if not auth
 # TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)
 # TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)

@@ -1,11 +1,18 @@
 import urllib
 import json
+import os
 
+from kivy.lang import Builder
 from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.snackbar import Snackbar
 
 
 URL_TIMEOUT = 5
+
+
+def load_kv(module_name):
+    print("module_name:", module_name)
+    Builder.load_file(f"{os.path.join(*module_name.split('.'))}.kv")
 
 
 class Notify(Snackbar):
