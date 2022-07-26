@@ -43,6 +43,31 @@ class AppMenu(MDDropdownMenu):
         self.items = [item for item in self.items if item['id'] != item_id]
 
 
+class ConfirmDialog(MDDialog):
+    def __init__(self, title, text="", on_ok=None):
+        kwargs = dict(
+            title=title,
+            text=text,
+            type='confirmation',
+            auto_dismiss=False,
+            buttons=[
+                MDFlatButton(
+                    text="CANCEL",
+                    theme_text_color="Custom",
+                    text_color=app.theme_cls.primary_color,
+                    on_release=lambda x: self.dismiss()
+                ),
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color=app.theme_cls.primary_color,
+                    on_release=lambda val: on_ok()
+                ),
+            ])
+
+        super().__init__(**kwargs)
+
+
 class BookList(Screen):
     def handle_addnew(self):
         print(f"Add New!")
@@ -97,7 +122,11 @@ class Book(MDCardSwipe):
     text = StringProperty()
     secondary_text = StringProperty()
 
-    dialog = None
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.dialog = ConfirmDialog(title="Delete Book",
+                                    text=f"Are you sure you want to permanently delete '{self.text}'?",
+                                    on_ok=self.do_delete)
 
     def do_delete(self):
         self.dialog.dismiss()
@@ -108,31 +137,9 @@ class Book(MDCardSwipe):
         Notify(text="Book deleted").open()
         app.get_books()
 
-    def delete_dialog(self):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Delete Book",
-                text=f"Are you sure you want to permanently delete '{self.text}'?",
-                type='confirmation',
-                auto_dismiss=False,
-                buttons=[
-                    MDFlatButton(
-                        text="CANCEL",
-                        text_color=app.theme_cls.primary_color,
-                        on_release=lambda x: self.dialog.dismiss()
-                    ),
-                    MDFlatButton(
-                        text="DELETE",
-                        text_color=app.theme_cls.primary_color,
-                        on_release=lambda x: self.do_delete()
-                    ),
-                ],
-            )
-        self.dialog.open()
-
     def handle_delete(self):
         if self.open_progress > 0.0:
-            self.delete_dialog()
+            self.dialog.open()
 
     def handle_edit(self, book_id):
         if self.open_progress == 0.0:
@@ -240,9 +247,7 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-
 # TODO: Refactor module into views/functionality
-# TODO: Refactor dialog to reusable class
 
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Make slide out easier on mobile (get rid of icon click?)
