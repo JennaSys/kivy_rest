@@ -177,6 +177,7 @@ class MainApp(MDApp):
         self.get_books()
 
     def get_books(self):
+        self.menu.dismiss()
         books_screen = self.sm.get_screen('books')
         books = [child for child in books_screen.ids.booklist.children]
         for book in books:
