@@ -4,7 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty
 from kivy.app import App
 
-from apputils import fetch, Notify, load_kv
+from apputils import fetch, Notify, load_kv, is_auth
 
 load_kv(__name__)
 
@@ -16,6 +16,9 @@ class BookEdit(Screen):
         app = App.get_running_app()
         app.switch_screen('edit')
 
+        self.enable(False)
+        is_auth(app.session_cookie, lambda rq, rp: self.enable(True))
+
         self.book_id = book_id if book_id else -1
         if book_id:
             rest_endpoint = os.environ['REST_ENDPOINT']
@@ -25,6 +28,9 @@ class BookEdit(Screen):
         self.clear()
         app = App.get_running_app()
         app.switch_screen('books')
+
+    def enable(self, status):
+        self.ids.save_edit.disabled = not status
 
     def load_data(self, request, result):
         book_data = result.get('book', None)

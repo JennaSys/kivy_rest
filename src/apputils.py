@@ -59,7 +59,7 @@ def fetch(url, callback=None, **kwargs):
         else:  # GET
             req_args['req_headers'] = {'Cookie': cookie if cookie else '', 'Accept': 'application/json'}
 
-        req = UrlRequest(**req_args)
+        return UrlRequest(**req_args)
 
     except Exception as e:
         print(e)
@@ -75,3 +75,8 @@ def buildParams(param_dict: dict):
     param_list = [f"&{key}={urllib.parse.quote_plus(val)}" for key, val in param_dict.items() if val]
     params = ''.join(param_list)
     return f"?{params[1:]}" if len(params) > 0 else ''
+
+
+def is_auth(cookie, callback):
+    rest_endpoint = os.environ['REST_ENDPOINT']
+    fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, onError=lambda rq, rp: False)
