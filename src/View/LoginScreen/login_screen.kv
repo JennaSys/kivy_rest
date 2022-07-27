@@ -14,9 +14,8 @@
 <LoginScreen>:
     MDCard:
         size_hint: 0.7, 0.7
-        size_hint_min: 300, 400
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        elevation: 10
+        elevation: dp(10)
         padding: rel_space
         spacing: rel_space
         border_radius: rel_space
@@ -40,7 +39,7 @@
             orientation: 'vertical'
             spacing: rel_space
             padding: rel_space
-            size_hint_x: 0.8
+            size_hint_x: 1
             size_hint_y: 0.6
             pos_hint: {"center_x": 0.5}
 
@@ -48,6 +47,7 @@
                 id: username
                 hint_text: "User Name"
                 icon_right: "account"
+                height: normal_font * 1.5
 
             TextField:
                 id: password
