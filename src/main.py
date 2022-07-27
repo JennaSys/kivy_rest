@@ -147,3 +147,6 @@ if __name__ == '__main__':
 # TODO: Back button goes to list - if already on list, then exit
 # TODO: Change transition for login to fade instead of swipe
 # TODO: Can login methods be moved from mainApp to View?
+# TODO: Clicking menu icons does nothing
+# TODO: Allow tab on login fields?
+# TODO: `Allow tap on edit fields?

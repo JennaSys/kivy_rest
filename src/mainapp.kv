@@ -2,6 +2,13 @@
 #:import BookEdit View.BookEdit
 #:import BookList View.BookList
 
+#:import Window kivy.core.window.Window
+#:set screen_size (Window.size[0]**2 + Window.size[1]**2)**0.5
+#:set large_font screen_size * 0.04
+#:set normal_font screen_size * 0.02
+#:set rel_space screen_size * 0.02
+#:set list_space screen_size * 0.01
+
 
 ScreenManager:
     BookList:
