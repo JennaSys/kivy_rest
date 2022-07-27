@@ -6,7 +6,6 @@ from kivy.app import App
 
 from apputils import fetch, Notify, load_kv
 
-
 load_kv(__name__)
 
 REST_ENDPOINT = os.environ['REST_ENDPOINT']
@@ -35,8 +34,6 @@ class BookEdit(Screen):
             self.ids.author.text = book_data['author']
 
     def handle_save(self):
-        print("Saving")
-
         body = {'title': self.ids.title.text, 'author': self.ids.author.text}
         if self.book_id > 0:
             body['id'] = self.book_id

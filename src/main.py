@@ -66,7 +66,6 @@ class ConfirmDialog(MDDialog):
 
 class BookList(Screen):
     def handle_addnew(self):
-        print(f"Add New!")
         app.sm.get_screen('edit').open()
 
 
@@ -83,7 +82,6 @@ class Book(MDCardSwipe):
 
     def do_delete(self):
         self.dialog.dismiss()
-        print(f"Delete {self.book_id}!")
         fetch(f"{REST_ENDPOINT}/books/{self.book_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
 
     def delete_success(self, request, result):
@@ -96,7 +94,6 @@ class Book(MDCardSwipe):
 
     def handle_edit(self, book_id):
         if self.open_progress == 0.0:
-            print("Edit book_id:", book_id)
             app.sm.get_screen('edit').open(book_id)
 
 
@@ -114,24 +111,16 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
         if platform in ['win', 'linux', 'macosx']:
-            Window.size = (400, 800)
+            Window.size = (400, 600)
         self.title = "Books"
 
         self.menu = AppMenu()
         self.sm = self.root
-        self.sm.current = 'login'
+        self.sm.current = 'books'
 
     def menu_callback(self, ref):
         self.menu.caller = ref
         self.menu.open()
-
-    def switch_screen(self, screen_name='books'):
-        self.menu.dismiss()
-        if screen_name == 'login' or self.sm.current == 'edit':
-            self.sm.transition.direction = 'right'
-        else:
-            self.sm.transition.direction = 'left'
-        self.sm.current = screen_name
 
     def on_start(self):
         self.get_books()
@@ -154,6 +143,14 @@ class MainApp(MDApp):
                 books_screen.ids.booklist.add_widget(
                     Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
                 )
+
+    def switch_screen(self, screen_name='books'):
+        self.menu.dismiss()
+        if screen_name == 'login' or self.sm.current == 'edit':
+            self.sm.transition.direction = 'right'
+        else:
+            self.sm.transition.direction = 'left'
+        self.sm.current = screen_name
 
     def cancel_login(self):
         self.switch_screen('books')
