@@ -155,7 +155,7 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
         if platform in ['win', 'linux', 'macosx']:
-            Window.size = (400, 600)
+            Window.size = (400, 800)
         self.title = "Books"
 
         self.menu = AppMenu()

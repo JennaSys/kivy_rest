@@ -1,7 +1,7 @@
 #:import Window kivy.core.window.Window
 
 #:set screen_size (Window.size[0]**2 + Window.size[1]**2)**0.5
-#:set large_font screen_size * 0.05
+#:set large_font screen_size * 0.04
 #:set normal_font screen_size * 0.02
 #:set rel_space screen_size * 0.02
 
@@ -31,7 +31,7 @@
             text: "LOGIN"
             font_size: large_font
             halign: 'center'
-            size_hint_y: 0.2
+            size_hint_y: 0.4
             theme_text_color: 'Custom'
             text_color: app.theme_cls.primary_color
 
@@ -40,7 +40,7 @@
             spacing: rel_space
             padding: rel_space
             size_hint_x: 1
-            size_hint_y: 0.6
+            size_hint_y: None
             pos_hint: {"center_x": 0.5}
 
             TextField:
