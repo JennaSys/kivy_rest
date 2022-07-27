@@ -18,8 +18,8 @@ class BookEdit(Screen):
 
         self.book_id = book_id if book_id else -1
         if book_id:
-            REST_ENDPOINT = os.environ['REST_ENDPOINT']
-            fetch(f"{REST_ENDPOINT}/books/{book_id}", self.load_data)
+            rest_endpoint = os.environ['REST_ENDPOINT']
+            fetch(f"{rest_endpoint}/books/{book_id}", self.load_data)
 
     def close(self, ref):
         self.clear()
@@ -41,9 +41,9 @@ class BookEdit(Screen):
         rest_resource = "books" if self.book_id < 0 else f"books/{self.book_id}"
         method = 'POST' if self.book_id < 0 else 'PUT'
         app = App.get_running_app()
-        REST_ENDPOINT = os.environ['REST_ENDPOINT']
+        rest_endpoint = os.environ['REST_ENDPOINT']
 
-        fetch(f"{REST_ENDPOINT}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
+        fetch(f"{rest_endpoint}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
 
     def save_success(self, request, result):
         Notify(text=f"Book {'added' if self.book_id < 0 else 'updated'}").open()

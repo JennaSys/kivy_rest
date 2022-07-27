@@ -8,7 +8,7 @@
             id: app_toolbar
             elevation: dp(10)
             title: "All the Books"
-            right_action_items: [["dots-vertical", lambda ref: app.menu_callback(ref)]]
+            right_action_items: [["dots-vertical", lambda ref: app.menu.click(ref)]]
 
         FloatLayout:
             ScrollView:

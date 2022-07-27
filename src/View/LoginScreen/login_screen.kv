@@ -18,7 +18,7 @@
         MDIconButton:
             icon: 'close'
             pos_hint: {"right": 1}
-            on_release: app.cancel_login()
+            on_release: root.cancel_login()
 
         MDLabel:
             text: "LOGIN"
@@ -52,7 +52,7 @@
             text: "LOGIN"
             font_size: normal_font
             pos_hint: {"center_x": 0.5}
-            on_release: app.do_login()
+            on_release: root.do_login()
 
         Widget:
             size_hint_y: 0.2
