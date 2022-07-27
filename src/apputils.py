@@ -2,16 +2,16 @@ import urllib
 import json
 import os
 
+from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.snackbar import Snackbar
-
 
 URL_TIMEOUT = 5
 
 
 def load_kv(module_name):
-    print("module_name:", module_name)
     Builder.load_file(f"{os.path.join(*module_name.split('.'))}.kv")
 
 
@@ -20,7 +20,12 @@ class Notify(Snackbar):
         text = kwargs.get('text', '')
         snack_type = kwargs.get('snack_type', 'success')
         bg_color = (.8, 0, 0, 1) if snack_type == 'error' else (0, .6, 0, 1)
-        super().__init__(text=text, bg_color=bg_color)
+        super().__init__(text=text,
+                         bg_color=bg_color,
+                         size_hint_x=(Window.width - (dp(10) * 2)) / Window.width,
+                         snackbar_x="10dp",
+                         snackbar_y="10dp"
+                         )
 
 
 def fetch(url, callback=None, **kwargs):

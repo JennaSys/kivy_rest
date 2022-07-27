@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from apputils import load_kv
 
+
 load_kv(__name__)
 
 

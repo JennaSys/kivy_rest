@@ -12,8 +12,6 @@ from kivy.utils import platform
 
 from apputils import fetch, Notify
 
-
-
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
 
@@ -23,7 +21,7 @@ class AppMenu(MDDropdownMenu):
         self.add_item(id="refresh", text="Refresh", icon="reload", on_release=app.get_books)
         self.add_item(id="login", text="Login", icon="login", on_release=app.login)
 
-        super().__init__(items=self.items, width_mult=2.5)
+        super().__init__(items=self.items, width_mult=3)
 
     def add_item(self, **kwargs):
         base_item = {"viewclass": "MenuItem",
@@ -162,7 +160,7 @@ class MainApp(MDApp):
 
         self.menu = AppMenu()
         self.sm = self.root
-        self.sm.current = 'books'
+        self.sm.current = 'login'
 
     def menu_callback(self, ref):
         self.menu.caller = ref
@@ -243,7 +241,6 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-
 # TODO: Get rid of all hard coded pixel sizing
 # TODO: Refactor module into views/functionality
 # TODO: Android app locks on exit
@@ -251,3 +248,5 @@ if __name__ == '__main__':
 # TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)
 # TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)
+# TODO: Back button goes to list - if already on list, then exit
+# TODO: Change transition for login to fade instead of swipe

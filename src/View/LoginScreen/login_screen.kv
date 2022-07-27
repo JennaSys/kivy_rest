@@ -1,14 +1,26 @@
-<LoginScreen>:
+#:import Window kivy.core.window.Window
 
+#:set screen_size (Window.size[0]**2 + Window.size[1]**2)**0.5
+#:set large_font screen_size * 0.05
+#:set normal_font screen_size * 0.02
+#:set rel_space screen_size * 0.02
+
+<TextField@MDTextFieldRound>:
+    normal_color: app.theme_cls.primary_light
+    font_size: normal_font
+    pos_hint: {"center_x": 0.5}
+
+
+<LoginScreen>:
     MDCard:
-        size_hint: None, None
-        size: 300, 400
+        size_hint: 0.7, 0.7
+        size_hint_min: 300, 400
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
         elevation: 10
-        padding: 25
-        spacing: 25
-        border_radius: 20
-        radius: [15]
+        padding: rel_space
+        spacing: rel_space
+        border_radius: rel_space
+        radius: [rel_space * 0.8]
         orientation: 'vertical'
 
         MDIconButton:
@@ -18,41 +30,37 @@
 
         MDLabel:
             text: "LOGIN"
-            font_size: 40
+            font_size: large_font
             halign: 'center'
-            size_hint_y: None
-            height: self.texture_size[1]
-            padding_y: 15
+            size_hint_y: 0.2
             theme_text_color: 'Custom'
             text_color: app.theme_cls.primary_color
 
-        MDTextFieldRound:
-            id: username
-            hint_text: "User Name"
-            icon_right: "account"
-            normal_color: app.theme_cls.primary_light
-            size_hint_x: None
-            width: 200
-            font_size: 18
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: rel_space
+            padding: rel_space
+            size_hint_x: 0.8
+            size_hint_y: 0.6
             pos_hint: {"center_x": 0.5}
 
-        MDTextFieldRound:
-            id: password
-            hint_text: "Password"
-            icon_right: "eye-off"
-            normal_color: app.theme_cls.primary_light
-            size_hint_x: None
-            width: 200
-            font_size: 18
-            pos_hint: {"center_x": 0.5}
-            password: True
+            TextField:
+                id: username
+                hint_text: "User Name"
+                icon_right: "account"
+
+            TextField:
+                id: password
+                hint_text: "Password"
+                icon_right: "eye-off"
+                password: True
 
         MDRoundFlatButton:
-            text: "LOG IN"
-            font_size: 12
+            text: "LOGIN"
+            font_size: normal_font
             pos_hint: {"center_x": 0.5}
+            size_hint_x: 0.5
             on_release: app.do_login()
 
         Widget:
-            size_hint_y: None
-            height: 10
+            size_hint_y: 0.2
