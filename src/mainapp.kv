@@ -1,5 +1,7 @@
 #:import LoginScreen View.LoginScreen
 #:import BookEdit View.BookEdit
+#:import BookList View.BookList
+
 
 ScreenManager:
     BookList:
@@ -9,65 +11,8 @@ ScreenManager:
     LoginScreen:
         name: 'login'
 
+
 <MenuItem>:
     IconLeftWidget:
         icon: root.icon
         pos_hint: {"center_y": .5}
-
-
-<BookList>:
-    MDBoxLayout:
-        orientation: "vertical"
-        padding: 10
-        spacing: "10dp"
-
-        MDToolbar:
-            id: app_toolbar
-            elevation: 10
-            title: "All the Books"
-            right_action_items: [["dots-vertical", lambda ref: app.menu_callback(ref)]]
-
-        FloatLayout:
-            ScrollView:
-                scroll_timeout : 100
-                pos: 0, 0
-
-                MDList:
-                    id: booklist
-                    adaptive_height: True
-                    padding: 0
-
-
-            MDFloatingActionButton:
-                icon: "plus-thick"
-    #            theme_text_color: "Custom"
-    #            text_color: [0,1,0,1]
-                md_bg_color: [1,0,0,1]
-                pos: root.width - self.width - dp(20), dp(20)
-                elevation: 10
-                on_release: root.handle_addnew()
-
-<Book>:
-    size_hint_y: None
-    height: content.height
-
-    MDCardSwipeLayerBox:
-        padding: "16dp"
-
-        MDIconButton:
-            icon: 'trash-can'
-            pos_hint: {"center_y": .5}
-            on_release: root.handle_delete()
-
-    MDCardSwipeFrontBox:
-        TwoLineIconListItem:
-            id: content
-            text: root.text
-            secondary_text: root.secondary_text
-            on_release: root.handle_edit(root.book_id)
-
-            IconLeftWidget:
-                icon: "book-open"
-                theme_text_color: "Custom"
-                text_color: app.theme_cls.primary_light
-                on_release: root.handle_edit(root.book_id)

@@ -8,8 +8,6 @@ from apputils import fetch, Notify, load_kv
 
 load_kv(__name__)
 
-REST_ENDPOINT = os.environ['REST_ENDPOINT']
-
 
 class BookEdit(Screen):
     book_id = NumericProperty()
@@ -17,8 +15,10 @@ class BookEdit(Screen):
     def open(self, book_id=None):
         app = App.get_running_app()
         app.switch_screen('edit')
+
         self.book_id = book_id if book_id else -1
         if book_id:
+            REST_ENDPOINT = os.environ['REST_ENDPOINT']
             fetch(f"{REST_ENDPOINT}/books/{book_id}", self.load_data)
 
     def close(self, ref):
@@ -41,6 +41,8 @@ class BookEdit(Screen):
         rest_resource = "books" if self.book_id < 0 else f"books/{self.book_id}"
         method = 'POST' if self.book_id < 0 else 'PUT'
         app = App.get_running_app()
+        REST_ENDPOINT = os.environ['REST_ENDPOINT']
+
         fetch(f"{REST_ENDPOINT}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
 
     def save_success(self, request, result):

@@ -1,18 +1,15 @@
 import os
 
 from kivymd.app import MDApp
-from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen
-from kivy.properties import NumericProperty, StringProperty
+from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.utils import platform
 
 from apputils import fetch, Notify
+from View import Book
 
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
@@ -37,64 +34,6 @@ class AppMenu(MDDropdownMenu):
 
     def remove_item(self, item_id):
         self.items = [item for item in self.items if item['id'] != item_id]
-
-
-class ConfirmDialog(MDDialog):
-    def __init__(self, title, text="", on_ok=None):
-        kwargs = dict(
-            title=title,
-            text=text,
-            type='confirmation',
-            auto_dismiss=False,
-            buttons=[
-                MDFlatButton(
-                    text="CANCEL",
-                    theme_text_color="Custom",
-                    text_color=app.theme_cls.primary_color,
-                    on_release=lambda x: self.dismiss()
-                ),
-                MDFlatButton(
-                    text="OK",
-                    theme_text_color="Custom",
-                    text_color=app.theme_cls.primary_color,
-                    on_release=lambda val: on_ok()
-                ),
-            ])
-
-        super().__init__(**kwargs)
-
-
-class BookList(Screen):
-    def handle_addnew(self):
-        app.sm.get_screen('edit').open()
-
-
-class Book(MDCardSwipe):
-    book_id = NumericProperty()
-    text = StringProperty()
-    secondary_text = StringProperty()
-
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self.dialog = ConfirmDialog(title="Delete Book",
-                                    text=f"Are you sure you want to permanently delete '{self.text}'?",
-                                    on_ok=self.do_delete)
-
-    def do_delete(self):
-        self.dialog.dismiss()
-        fetch(f"{REST_ENDPOINT}/books/{self.book_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
-
-    def delete_success(self, request, result):
-        Notify(text="Book deleted").open()
-        app.get_books()
-
-    def handle_delete(self):
-        if self.open_progress > 0.0:
-            self.dialog.open()
-
-    def handle_edit(self, book_id):
-        if self.open_progress == 0.0:
-            app.sm.get_screen('edit').open(book_id)
 
 
 class MenuItem(OneLineIconListItem):
@@ -207,3 +146,4 @@ if __name__ == '__main__':
 # TODO: Make slide out easier on mobile (get rid of icon click?)
 # TODO: Back button goes to list - if already on list, then exit
 # TODO: Change transition for login to fade instead of swipe
+# TODO: Can login methods be moved from mainApp to View?
