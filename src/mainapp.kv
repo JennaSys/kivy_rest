@@ -1,4 +1,5 @@
 #:import LoginScreen View.LoginScreen
+#:import BookEdit View.BookEdit
 
 ScreenManager:
     BookList:
@@ -13,38 +14,6 @@ ScreenManager:
         icon: root.icon
         pos_hint: {"center_y": .5}
 
-<BookEdit>:
-    MDBoxLayout:
-        orientation: "vertical"
-        padding: 10
-        spacing: "10dp"
-
-        MDToolbar:
-            id: app_toolbar
-            elevation: 10
-            title: f"Edit Book ({'New' if root.book_id < 0 else str(root.book_id)})"
-            right_action_items: [["close", root.close]]
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: [20]
-            spacing: 15
-
-            MDTextField:
-                id: title
-                hint_text: "Book Title"
-
-            MDTextField:
-                id: author
-                hint_text: "Book Author"
-
-            MDRoundFlatButton:
-                text: "SAVE"
-                font_size: 12
-                pos_hint: {"center_x": 0.5}
-                on_release: root.handle_save()
-
-            Widget:
 
 <BookList>:
     MDBoxLayout:

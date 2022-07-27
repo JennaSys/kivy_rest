@@ -1,0 +1,39 @@
+#:import Window kivy.core.window.Window
+
+#:set screen_size (Window.size[0]**2 + Window.size[1]**2)**0.5
+#:set large_font screen_size * 0.04
+#:set normal_font screen_size * 0.02
+#:set rel_space screen_size * 0.02
+
+<BookEdit>:
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: 10
+        spacing: "10dp"
+
+        MDToolbar:
+            id: app_toolbar
+            elevation: 10
+            title: f"Edit Book ({'New' if root.book_id < 0 else str(root.book_id)})"
+            right_action_items: [["close", root.close]]
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: [20]
+            spacing: 15
+
+            MDTextField:
+                id: title
+                hint_text: "Book Title"
+
+            MDTextField:
+                id: author
+                hint_text: "Book Author"
+
+            MDRoundFlatButton:
+                text: "SAVE"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                on_release: root.handle_save()
+
+            Widget:
