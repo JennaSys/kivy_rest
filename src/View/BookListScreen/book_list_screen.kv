@@ -6,7 +6,7 @@
 
         MDToolbar:
             id: app_toolbar
-            elevation: dp(10)
+            elevation: widget_elevation
             title: "All the Books"
             right_action_items: [["dots-vertical", lambda ref: app.menu.click(ref)]]
 
@@ -24,7 +24,7 @@
                 icon: "plus-thick"
                 md_bg_color: [1,0,0,1]
                 pos: root.width - self.width - dp(20), dp(20)
-                elevation: dp(10)
+                elevation: widget_elevation
                 on_release: root.handle_addnew()
 
 

@@ -10,7 +10,7 @@
 
         MDToolbar:
             id: app_toolbar
-            elevation: dp(10)
+            elevation: widget_elevation
             title: f"Edit Book ({'New' if root.book_id < 0 else str(root.book_id)})"
             right_action_items: [["close", root.close]]
 
