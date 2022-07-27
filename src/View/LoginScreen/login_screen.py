@@ -1,6 +1,6 @@
 import os
 
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from apputils import load_kv, Notify, fetch
 
@@ -9,33 +9,34 @@ load_kv(__name__)
 
 class LoginScreen(Screen):
     @staticmethod
-    def login():
-        app = App.get_running_app()
+    def open():
+        app = MDApp.get_running_app()
         app.switch_screen('login')
 
     @staticmethod
-    def cancel_login():
-        app = App.get_running_app()
-        app.switch_screen('books')
+    def close():
+        app = MDApp.get_running_app()
+        app.sm.get_screen('books').open()
 
     def clear(self):
         self.ids.username.text = ""
         self.ids.password.text = ""
 
     def logout(self):
-        app = App.get_running_app()
+        app = MDApp.get_running_app()
         app.menu.dismiss()
 
         def on_success(request, result):
             Notify(text="Logged out").open()
+            app.sm.get_screen('books').open()
 
-        app = App.get_running_app()
+        app = MDApp.get_running_app()
         rest_endpoint = os.environ['REST_ENDPOINT']
         fetch(f"{rest_endpoint}/logout", on_success, cookie=app.session_cookie)
 
         app.session_cookie = None
 
-        app.menu.add_item(id="login", text="Login", icon="login", on_release=self.login)
+        app.menu.add_item(id="login", text="Login", icon="login", on_release=self.open)
         app.menu.remove_item('logout')
 
     def do_login(self):
@@ -52,10 +53,10 @@ class LoginScreen(Screen):
         self.clear()
 
     def login_success(self, request, result):
-        app = App.get_running_app()
+        app = MDApp.get_running_app()
         app.session_cookie = request.resp_headers.get('Set-Cookie', None)
         Notify(text="Login successful!").open()
-        app.switch_screen('books')
+        app.sm.get_screen('books').open()
 
         app.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.logout)
         app.menu.remove_item('login')

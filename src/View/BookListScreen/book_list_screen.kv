@@ -21,6 +21,7 @@
                     padding: 0
 
             MDFloatingActionButton:
+                id: add_btn
                 icon: "plus-thick"
                 md_bg_color: [1,0,0,1]
                 pos: root.width - self.width - dp(20), dp(20)
@@ -36,6 +37,7 @@
         padding: dp(16)
 
         MDIconButton:
+            id: del_btn
             icon: 'trash-can'
             pos_hint: {"center_y": .5}
             on_release: root.handle_delete()

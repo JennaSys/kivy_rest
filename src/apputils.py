@@ -77,6 +77,6 @@ def buildParams(param_dict: dict):
     return f"?{params[1:]}" if len(params) > 0 else ''
 
 
-def is_auth(cookie, callback):
+def auth_exec(cookie, callback):
     rest_endpoint = os.environ['REST_ENDPOINT']
     fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, onError=lambda rq, rp: False)
