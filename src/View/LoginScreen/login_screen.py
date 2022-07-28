@@ -2,14 +2,14 @@ import os
 
 from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen
+from kivymd.uix.screen import MDScreen
 
 from apputils import load_kv, Notify, fetch
 
 load_kv(__name__)
 
 
-class LoginScreen(Screen):
+class LoginScreen(MDScreen):
     username = ObjectProperty()
     password = ObjectProperty()
 
