@@ -23,7 +23,7 @@ class BookEdit(Screen):
         self.ids.save_edit.disabled = not authorized
         for field in self.ids.edit_fields.children:
             if isinstance(field, EditField):
-                field.disabled = not authorized
+                field.readonly = not authorized
 
         app.switch_screen('edit')
 

@@ -1,8 +1,10 @@
-<TextField@MDTextFieldRound>:
+<LoginField@MDTextFieldRound>:
     normal_color: app.theme_cls.primary_light
     font_size: normal_font
     pos_hint: {"center_x": 0.5}
     write_tab: False
+    multiline: False
+#    on_text_validate: root.set_next(focus_next)
 
 
 <LoginScreen>:
@@ -40,13 +42,13 @@
             size_hint_y: None
             pos_hint: {"center_x": 0.5}
 
-            TextField:
+            LoginField:
                 id: username
                 hint_text: "User Name"
                 icon_right: "account"
                 height: normal_font * 1.5
 
-            TextField:
+            LoginField:
                 id: password
                 hint_text: "Password"
                 icon_right: "eye-off"

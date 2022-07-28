@@ -36,6 +36,11 @@ def fetch(url, callback=None, **kwargs):
     kw_params = kwargs.pop('params', {})
     params = buildParams(kw_params)
 
+    def request_error(request, result):
+        Notify(text=f"Server error {request.resp_status}: {result}", snack_type='error').open()
+        if on_error:
+            on_error(request, result)
+
     try:
         req_args = {'url': url if len(params) == 0 else f"{url}{params}",
                     'method': method,
@@ -65,10 +70,6 @@ def fetch(url, callback=None, **kwargs):
         print(e)
         if on_error:
             on_error(str(e), "Fetch Error")
-
-
-def request_error(request, result):
-    Notify(text=f"Server error {request.resp_status}: {result}", snack_type='error').open()
 
 
 def buildParams(param_dict: dict):

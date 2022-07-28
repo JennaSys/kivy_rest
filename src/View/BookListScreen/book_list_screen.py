@@ -7,7 +7,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
-from kivy.properties import NumericProperty, StringProperty
+from kivy.properties import NumericProperty, StringProperty, ObjectProperty
 
 from apputils import fetch, Notify, load_kv
 
@@ -41,6 +41,12 @@ class ConfirmDialog(MDDialog):
 
 
 class BookList(Screen):
+    add_btn = ObjectProperty()
+
+    def show_add_btn(self, show=True):
+        self.add_btn.disabled = not show
+        self.add_btn.opacity = 1.0 if show else 0
+
     @staticmethod
     def handle_addnew():
         app = MDApp.get_running_app()
@@ -49,8 +55,7 @@ class BookList(Screen):
     def open(self):
         app = MDApp.get_running_app()
         authorized = app.is_auth()
-        self.ids.add_btn.disabled = not authorized
-        self.ids.add_btn.opacity = 1.0 if authorized else 0
+        self.show_add_btn(authorized)
         for book in self.ids.booklist.children:
             if isinstance(book, Book):
                 book.ids.del_btn.disabled = not authorized
