@@ -1,5 +1,6 @@
 import os
 
+from kivy.base import EventLoop
 from kivymd.app import MDApp
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
@@ -61,7 +62,17 @@ class MainApp(MDApp):
         self.sm.get_screen('books').open()
 
     def on_start(self):
+        EventLoop.window.bind(on_keyboard=self.keyboard_hook)
         self.sm.get_screen('books').get_books()
+
+    def keyboard_hook(self, key, scancode, *args):
+        print("kbd key:", scancode)
+        if scancode == 27:  # ESC
+            if self.sm.current == 'books':
+                pass  # Exit App
+            else:
+                self.sm.get_screen('books').open()
+                return True
 
     def switch_screen(self, screen_name='books'):
         self.menu.dismiss()
@@ -86,6 +97,5 @@ if __name__ == '__main__':
 # TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)
 # TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)
-# TODO: Back button goes to list - if already on list, then exit
 # TODO: Change transition for login to fade instead of swipe
 # TODO: Clicking menu icons does nothing
