@@ -65,11 +65,13 @@ class MainApp(MDApp):
         EventLoop.window.bind(on_keyboard=self.keyboard_hook)
         self.sm.get_screen('books').get_books()
 
-    def keyboard_hook(self, key, scancode, *args):
-        print("kbd key:", scancode)
+    def keyboard_hook(self, key, scancode, codepoint, modifier, *args):
         if scancode == 27:  # ESC
             if self.sm.current == 'books':
                 pass  # Exit App
+            elif self.sm.current == 'edit':
+                self.sm.get_screen('edit').close()
+                return True
             else:
                 self.sm.get_screen('books').open()
                 return True
