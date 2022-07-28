@@ -2,9 +2,13 @@
     normal_color: app.theme_cls.primary_light
     font_size: normal_font
     pos_hint: {"center_x": 0.5}
+    write_tab: False
 
 
 <LoginScreen>:
+    username: username
+    password: password
+
     MDCard:
         size_hint: 0.7, 0.7
         pos_hint: {"center_x": 0.5, "center_y": 0.5}

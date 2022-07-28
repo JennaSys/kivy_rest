@@ -8,8 +8,6 @@ from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.utils import platform
 
-from View import LoginScreen
-
 REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
 
@@ -49,6 +47,7 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
+
         if platform in ['win', 'linux', 'macosx']:
             Window.size = (400, 600)
         self.title = "Books"
@@ -57,9 +56,8 @@ class MainApp(MDApp):
 
         self.menu = AppMenu()
         self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
-        self.menu.add_item(id="login", text="Login", icon="login", on_release=LoginScreen.open)
+        self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
 
-        # self.sm.current = 'books'
         self.sm.get_screen('books').open()
 
     def on_start(self):
@@ -91,5 +89,3 @@ if __name__ == '__main__':
 # TODO: Back button goes to list - if already on list, then exit
 # TODO: Change transition for login to fade instead of swipe
 # TODO: Clicking menu icons does nothing
-# TODO: Allow tab/next on login fields?
-# TODO: Allow tab/next on edit fields?

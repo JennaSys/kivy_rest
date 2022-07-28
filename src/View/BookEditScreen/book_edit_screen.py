@@ -3,10 +3,15 @@ import os
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty
 from kivymd.app import MDApp
+from kivymd.uix.textfield import MDTextField
 
 from apputils import fetch, Notify, load_kv
 
 load_kv(__name__)
+
+
+class EditField(MDTextField):
+    pass
 
 
 class BookEdit(Screen):
@@ -14,7 +19,12 @@ class BookEdit(Screen):
 
     def open(self, book_id=None):
         app = MDApp.get_running_app()
-        self.ids.save_edit.disabled = not app.is_auth()
+        authorized = app.is_auth()
+        self.ids.save_edit.disabled = not authorized
+        for field in self.ids.edit_fields.children:
+            if isinstance(field, EditField):
+                field.disabled = not authorized
+
         app.switch_screen('edit')
 
         self.book_id = book_id if book_id else -1

@@ -28,6 +28,13 @@
                 elevation: widget_elevation
                 on_release: root.handle_addnew()
 
+    MDSpinner:
+        id: loading
+        size_hint: None, None
+        size: dp(46), dp(46)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        active: False
+
 
 <Book>:
     size_hint_y: None

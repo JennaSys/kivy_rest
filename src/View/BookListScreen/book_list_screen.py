@@ -1,5 +1,7 @@
 import os
+import threading
 
+from kivy.clock import mainthread
 from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
@@ -58,23 +60,32 @@ class BookList(Screen):
     def get_books(self):
         app = MDApp.get_running_app()
         app.menu.dismiss()
-        books = [child for child in self.ids.booklist.children]
-        for book in books:
-            if isinstance(book, Book):
-                self.ids.booklist.remove_widget(book)
 
-        rest_endpoint = os.environ['REST_ENDPOINT']
-        fetch(f"{rest_endpoint}/books", self.load_data)
+        def _load_data(request, result):
+            book_data = result.get('books', None)
+            if book_data:
+                authorized = app.is_auth()
+                for book in book_data:
+                    new_book = Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
+                    new_book.ids.del_btn.disabled = not authorized
+                    self.ids.booklist.add_widget(new_book)
 
-    def load_data(self, request, result):
-        book_data = result.get('books', None)
-        if book_data:
-            app = MDApp.get_running_app()
-            authorized = app.is_auth()
-            for book in book_data:
-                new_book = Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
-                new_book.ids.del_btn.disabled = not authorized
-                self.ids.booklist.add_widget(new_book)
+            self.ids.loading.active = False
+
+        @mainthread
+        def _clear_data():
+            self.ids.booklist.clear_widgets()
+
+        def _on_error(*args):
+            self.ids.loading.active = False
+
+        def _get_books():
+            self.ids.loading.active = True
+            _clear_data()
+            rest_endpoint = os.environ['REST_ENDPOINT']
+            fetch(f"{rest_endpoint}/books", _load_data, onError=_on_error)
+
+        threading.Thread(target=_get_books).start()
 
 
 class Book(MDCardSwipe):

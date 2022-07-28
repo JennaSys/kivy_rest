@@ -1,5 +1,6 @@
-<EditField@MDTextField>:
+<EditField>:
     font_size: normal_font
+    write_tab: False
 
 
 <BookEdit>:
@@ -15,6 +16,7 @@
             right_action_items: [["close", root.close]]
 
         MDBoxLayout:
+            id: edit_fields
             orientation: 'vertical'
             padding: [rel_space]
             spacing: rel_space
