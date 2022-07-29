@@ -7,7 +7,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
-from kivy.properties import NumericProperty, StringProperty, ObjectProperty
+from kivy.properties import NumericProperty, StringProperty
 
 from apputils import fetch, Notify, load_kv
 

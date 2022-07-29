@@ -23,8 +23,8 @@
     MDFloatingActionButton:
         id: add_btn
         icon: "plus-thick"
-        pos: root.width - self.width - rel_space, rel_space
-        elevation: widget_elevation
+        pos: root.width - self.width - (rel_space * 2), rel_space * 2
+#        elevation: widget_elevation
         on_release: root.handle_addnew()
 
     MDSpinner:
