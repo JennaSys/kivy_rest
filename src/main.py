@@ -75,6 +75,8 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
 
+        self.icon = 'images/icon.png'
+
         if platform in ['win', 'linux', 'macosx']:
             Window.size = (400, 600)
         self.title = "Books"
