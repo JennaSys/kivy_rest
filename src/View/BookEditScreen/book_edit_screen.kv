@@ -7,13 +7,14 @@
 <BookEdit>:
     MDBoxLayout:
         orientation: "vertical"
+        md_bg_color: app.theme_cls.bg_dark
         padding: rel_space
-        spacing: rel_space
 
-        MDToolbar:
+        MDTopAppBar:
             id: app_toolbar
             elevation: widget_elevation
             title: f"Edit Book ({'New' if root.book_id is None else str(root.book_id)})"
+            anchor_title: "left"
             right_action_items: [["close", root.close]]
 
         MDBoxLayout:
@@ -30,11 +31,12 @@
                 id: author
                 hint_text: "Book Author"
 
-            MDRoundFlatButton:
+            MDFillRoundFlatButton:
                 id: save_edit
                 text: "SAVE"
                 font_size: normal_font
                 pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.7
                 disabled: True
                 on_release: root.handle_save()
 

@@ -2,8 +2,7 @@
     MDBoxLayout:
         orientation: "vertical"
         md_bg_color: app.theme_cls.bg_dark
-        padding: rel_space
-#        spacing: rel_space
+        padding: [rel_space]
 
         MDTopAppBar:
             id: app_toolbar
@@ -19,7 +18,6 @@
                 id: booklist
                 adaptive_height: True
                 spacing: list_space
-#                padding: 0
                 md_bg_color: app.theme_cls.bg_dark
 
     MDFloatingActionButton:
@@ -42,7 +40,7 @@
     height: list_item.height
 
     MDCardSwipeLayerBox:
-        padding: dp(16)
+        padding: [dp(16)]
 
         MDIconButton:
             id: del_btn
