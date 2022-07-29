@@ -10,7 +10,7 @@ from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.utils import platform
 
-REST_ENDPOINT = 'http://192.168.2.154:8005/api'
+REST_ENDPOINT = 'http://192.168.2.154:8000/api'
 
 
 class AppMenu(MDDropdownMenu):
@@ -84,9 +84,9 @@ class MainApp(MDApp):
         self.sm = self.root
 
         self.menu = AppMenu()
+        self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="settings", text="Settings", icon="cog", on_release=self.open_settings)
         self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
-        self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
 
         self.sm.get_screen('books').open()
@@ -128,8 +128,8 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-# TODO: Android app locks on exit
+# TODO: Create public REST server (recreate db on restart | change usr/pwd)
 # TODO: Add is_auth() using ping
 # TODO: Add user to title if logged in
-# TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)
+# TODO: Android app locks on exit
