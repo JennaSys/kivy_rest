@@ -29,7 +29,7 @@ class Notify(Snackbar):
 
 
 def fetch(url, callback=None, **kwargs):
-    on_error = kwargs.pop('onError', None)
+    on_error = kwargs.pop('on_error', None)
     method = kwargs.pop('method', 'GET')
     cookie = kwargs.pop('cookie', None)
 
@@ -80,4 +80,4 @@ def buildParams(param_dict: dict):
 
 def auth_exec(cookie, callback):
     rest_endpoint = os.environ['REST_ENDPOINT']
-    fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, onError=lambda rq, rp: False)
+    fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, on_error=lambda rq, rp: False)

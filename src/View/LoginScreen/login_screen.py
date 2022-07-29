@@ -46,7 +46,7 @@ class LoginScreen(MDScreen):
 
         body = {'username': self.ids.username.text, 'password': self.ids.password.text}
         rest_endpoint = os.environ['REST_ENDPOINT']
-        fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, onError=login_error)
+        fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, on_error=login_error)
 
         self.clear()
 

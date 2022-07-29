@@ -81,6 +81,7 @@ class BookList(MDScreen):
             self.ids.loading.active = True
             self.ids.booklist.clear_widgets()
 
+        @mainthread
         def _on_error(*args):
             self.ids.loading.active = False
 
@@ -88,7 +89,7 @@ class BookList(MDScreen):
             Clock.schedule_once(lambda dt: _clear_data(), 0)
 
             rest_endpoint = os.environ['REST_ENDPOINT']
-            fetch(f"{rest_endpoint}/books", _load_data, onError=_on_error)
+            fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
 
         threading.Thread(target=_get_books).start()
 

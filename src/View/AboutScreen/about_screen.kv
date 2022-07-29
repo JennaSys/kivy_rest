@@ -1,0 +1,52 @@
+#:import version version.__version__
+
+<AboutScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.theme_cls.bg_dark
+        padding: [rel_space]
+
+        MDTopAppBar:
+            id: app_toolbar
+            elevation: widget_elevation
+            title: f"About {app.title}"
+            anchor_title: "left"
+            right_action_items: [["close", root.close]]
+
+        MDBoxLayout:
+            id: edit_fields
+            orientation: 'vertical'
+            padding: [rel_space]
+            spacing: rel_space
+
+            Image:
+                source: 'images/logo.png'
+                size_hint_x: 1
+
+            MDLabel:
+                id: description
+                text: f"Kivy REST Demo Application"
+                font_size: normal_font
+                halign: 'center'
+                size_hint_y: 0.2
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_color
+
+            MDLabel:
+                id: version
+                text: f"Version: {version}"
+                font_size: normal_font
+                halign: 'center'
+                size_hint_y: 0.2
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_color
+
+            Widget:
+
+            MDFillRoundFlatButton:
+                id: close
+                text: "CLOSE"
+                font_size: normal_font
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.7
+                on_release: root.close()
