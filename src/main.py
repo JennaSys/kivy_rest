@@ -44,6 +44,11 @@ class MainApp(MDApp):
     menu = None
     session_cookie = None
 
+    def build_config(self, config):
+        config.setdefaults('app', {
+            'rest_endpoint': REST_ENDPOINT
+        })
+
     def build(self):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
@@ -52,6 +57,8 @@ class MainApp(MDApp):
         if platform in ['win', 'linux', 'macosx']:
             Window.size = (400, 600)
         self.title = "Books"
+
+        os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
         self.sm = self.root
 
@@ -89,7 +96,7 @@ class MainApp(MDApp):
 
 
 if __name__ == '__main__':
-    os.environ['REST_ENDPOINT'] = REST_ENDPOINT
+    # os.environ['REST_ENDPOINT'] = REST_ENDPOINT
     app = MainApp()
     app.run()
 
