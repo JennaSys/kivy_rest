@@ -20,7 +20,7 @@ class BookEdit(MDScreen):
         for field in self.ids.edit_fields.children:
             if isinstance(field, Factory.BookField):
                 field.cursor = (0, 0)
-                field.readonly = not authorized
+                field.disabled = not authorized
 
         app.switch_screen('edit')
 

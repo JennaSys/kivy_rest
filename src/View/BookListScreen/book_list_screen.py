@@ -43,7 +43,7 @@ class ConfirmDialog(MDDialog):
 class BookList(MDScreen):
     def show_add_btn(self, show=True):
         self.ids.add_btn.disabled = not show
-        self.ids.add_btn.opacity = 0.7 if show else 0
+        self.ids.add_btn.opacity = 1.0 if show else 0
 
     @staticmethod
     def handle_addnew():

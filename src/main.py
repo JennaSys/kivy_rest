@@ -100,4 +100,3 @@ if __name__ == '__main__':
 # TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)
 # TODO: Change transition for login to fade instead of swipe
-# TODO: Clicking menu icons does nothing
