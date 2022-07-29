@@ -6,7 +6,7 @@ from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen
+from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty, StringProperty, ObjectProperty
 
 from apputils import fetch, Notify, load_kv
@@ -40,12 +40,10 @@ class ConfirmDialog(MDDialog):
         super().__init__(**kwargs)
 
 
-class BookList(Screen):
-    add_btn = ObjectProperty()
-
+class BookList(MDScreen):
     def show_add_btn(self, show=True):
-        self.add_btn.disabled = not show
-        self.add_btn.opacity = 1.0 if show else 0
+        self.ids.add_btn.disabled = not show
+        self.ids.add_btn.opacity = 0.7 if show else 0
 
     @staticmethod
     def handle_addnew():

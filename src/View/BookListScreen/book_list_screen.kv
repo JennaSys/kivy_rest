@@ -1,33 +1,33 @@
 <BookList>:
-    add_btn: add_btn
-
     MDBoxLayout:
         orientation: "vertical"
-        padding: list_space
-        spacing: list_space
+        md_bg_color: app.theme_cls.bg_dark
+        padding: rel_space
+#        spacing: rel_space
 
-        MDToolbar:
+        MDTopAppBar:
             id: app_toolbar
             elevation: widget_elevation
             title: "All the Books"
+            anchor_title: "left"
             right_action_items: [["dots-vertical", lambda ref: app.menu.click(ref)]]
 
-        FloatLayout:
-            ScrollView:
-                scroll_timeout : 100
-                pos: 0, 0
+        ScrollView:
+            size_hint_y: .8
 
-                MDList:
-                    id: booklist
-                    adaptive_height: True
-                    padding: 0
+            MDList:
+                id: booklist
+                adaptive_height: True
+                spacing: list_space
+#                padding: 0
+                md_bg_color: app.theme_cls.bg_dark
 
-            MDFloatingActionButton:
-                id: add_btn
-                icon: "plus-thick"
-                pos: root.width - self.width - dp(20), dp(20)
-                elevation: widget_elevation
-                on_release: root.handle_addnew()
+    MDFloatingActionButton:
+        id: add_btn
+        icon: "plus-thick"
+        pos: root.width - self.width - rel_space, rel_space
+        elevation: widget_elevation
+        on_release: root.handle_addnew()
 
     MDSpinner:
         id: loading
@@ -39,7 +39,7 @@
 
 <Book>:
     size_hint_y: None
-    height: content.height
+    height: list_item.height
 
     MDCardSwipeLayerBox:
         padding: dp(16)
@@ -52,12 +52,12 @@
 
     MDCardSwipeFrontBox:
         TwoLineIconListItem:
-            id: content
+            id: list_item
             text: root.text
             secondary_text: root.secondary_text
             on_release: root.handle_edit(root.book_id)
 
-            IconLeftWidget:
+            IconLeftWidgetWithoutTouch:
                 icon: "book-open"
                 theme_text_color: "Custom"
                 text_color: app.theme_cls.primary_light
