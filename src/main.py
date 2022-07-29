@@ -10,7 +10,7 @@ from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.utils import platform
 
-REST_ENDPOINT = 'http://192.168.2.154:8000/api'
+REST_ENDPOINT = 'https://restdemo.jennasys.com/api'
 
 
 class AppMenu(MDDropdownMenu):
