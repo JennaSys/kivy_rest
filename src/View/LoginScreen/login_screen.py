@@ -1,6 +1,5 @@
 import os
 
-from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
@@ -10,22 +9,19 @@ load_kv(__name__)
 
 
 class LoginScreen(MDScreen):
-    username = ObjectProperty()
-    password = ObjectProperty()
-
     def open(self):
         app = MDApp.get_running_app()
-        self.username.focus = True
+        self.ids.username.focus = True
         app.switch_screen('login')
 
-    @staticmethod
-    def close():
+    def close(self):
+        self.clear()
         app = MDApp.get_running_app()
         app.sm.get_screen('books').open()
 
     def clear(self):
-        self.username.text = ""
-        self.password.text = ""
+        self.ids.username.text = ""
+        self.ids.password.text = ""
 
     def logout(self):
         app = MDApp.get_running_app()
@@ -48,7 +44,7 @@ class LoginScreen(MDScreen):
         def login_error(request, result):
             Notify(text="Login failed!", snack_type='error').open()
 
-        body = {'username': self.username.text, 'password': self.password.text}
+        body = {'username': self.ids.username.text, 'password': self.ids.password.text}
         rest_endpoint = os.environ['REST_ENDPOINT']
         fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, onError=login_error)
 

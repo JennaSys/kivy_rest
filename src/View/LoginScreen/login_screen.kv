@@ -1,36 +1,38 @@
-<LoginField@MDTextFieldRound>:
+<ElevatedCard@MDCard+FakeRectangularElevationBehavior>
+    elevation: widget_elevation
+    padding: rel_space
+    spacing: rel_space
+    border_radius: rel_space * 1.2
+    radius: [rel_space]
+    orientation: 'vertical'
+
+
+<LoginField@MDTextField>:
+    mode: "round"
     normal_color: app.theme_cls.primary_light
     font_size: normal_font
     pos_hint: {"center_x": 0.5}
     write_tab: False
     multiline: False
-#    on_text_validate: root.set_next(focus_next)
 
 
 <LoginScreen>:
-    username: username
-    password: password
+    md_bg_color: app.theme_cls.bg_dark
 
-    MDCard:
+    ElevatedCard:
         size_hint: 0.7, 0.7
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        elevation: widget_elevation
-        padding: rel_space
-        spacing: rel_space
-        border_radius: rel_space
-        radius: [rel_space * 0.8]
-        orientation: 'vertical'
 
         MDIconButton:
             icon: 'close'
-            pos_hint: {"right": 1}
+            pos_hint: {"right": 1, "top": 1}
             on_release: root.close()
 
         MDLabel:
             text: "LOGIN"
             font_size: large_font
             halign: 'center'
-            size_hint_y: 0.4
+            size_hint_y: 0.2
             theme_text_color: 'Custom'
             text_color: app.theme_cls.primary_color
 
@@ -38,9 +40,10 @@
             orientation: 'vertical'
             spacing: rel_space
             padding: rel_space
-            size_hint_x: 1
-            size_hint_y: None
-            pos_hint: {"center_x": 0.5}
+            size_hint_x: 0.9
+            size_hint_y: 0.6
+            pos_hint: {"center_x": .5, "center_y": .6}
+            adaptive_height: True
 
             LoginField:
                 id: username
@@ -54,11 +57,12 @@
                 icon_right: "eye-off"
                 password: True
 
-        MDRoundFlatButton:
-            text: "LOGIN"
-            font_size: normal_font
-            pos_hint: {"center_x": 0.5}
-            on_release: root.do_login()
+            MDFillRoundFlatButton:
+                text: "LOGIN"
+                font_size: normal_font
+                pos_hint: {"center_x": 0.5}
+                size: username.size[0] + (rel_space * 2), username.size[1]
+                on_release: root.do_login()
 
-        Widget:
-            size_hint_y: 0.2
+            Widget:
+                size_hint_y: 0.2

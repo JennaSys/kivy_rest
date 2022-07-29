@@ -96,7 +96,7 @@ if __name__ == '__main__':
 # TODO: Android app locks on exit
 # TODO: Add is_auth() using ping
 # TODO: Add user to title if logged in
-# TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)
+# TODO: Add menu item to set (and locally save) rest endpoint (kivy.uix.settings.SettingItem)(https://kivy.org/doc/stable/api-kivy.app.html#application-configuration)
 # TODO: Add About screen showing version/build date/JennaSys
 # TODO: Make slide out easier on mobile (get rid of icon click?)
 # TODO: Change transition for login to fade instead of swipe
