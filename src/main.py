@@ -128,7 +128,9 @@ if __name__ == '__main__':
     app = MainApp()
     app.run()
 
-# TODO: Create public REST server (recreate db on restart | change usr/pwd)
+# TODO: Create public REST server (recreate db on restart? | change usr/pwd(hash))
+# TODO: Build (release?) apk(https://www.browserstack.com/guide/test-aab-file-on-android-device) (aab? https://github.com/google/bundletool) on github
+
 # TODO: Add is_auth() using ping
 # TODO: Add user to title if logged in
 # TODO: Make slide out easier on mobile (get rid of icon click?)
