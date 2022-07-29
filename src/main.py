@@ -75,11 +75,11 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
 
+        self.title = "Books"
         self.icon = 'images/icon.png'
 
         if platform in ['win', 'linux', 'macosx']:
             Window.size = (400, 600)
-        self.title = "Books"
 
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
@@ -96,6 +96,9 @@ class MainApp(MDApp):
     def on_start(self):
         EventLoop.window.bind(on_keyboard=self.keyboard_hook)
         self.sm.get_screen('books').get_books()
+
+    def on_stop(self):
+        Window.close()
 
     def keyboard_hook(self, key, scancode, codepoint, modifier, *args):
         if scancode == 27:  # ESC
