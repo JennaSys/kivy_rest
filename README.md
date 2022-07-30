@@ -10,6 +10,6 @@ A [Kivy](https://kivy.org) based CRUD demo application that makes use of a full 
 - Android (see below) and iOS (not tested) builds can be compiled with [buildozer](https://buildozer.readthedocs.io/en/latest/index.html)
 
 ### Screenshots
-<img src="images/Kivy_REST_Demo_List.jpg" width="180" alt="App screen - List"/>&nbsp;<img src="images/Kivy_REST_Demo_Edit.jpg" width="180" alt="App screen - Edit"/>&nbsp;<img src="images/Kivy_REST_Demo_Login.jpg" width="180" alt="App screen - Login"/>&nbsp;<img src="images/Kivy_REST_Demo_About.jpg" width="180" alt="App screen - About"/>&nbsp;<img src="images/Kivy_REST_Demo_Settings.jpg" width="180" alt="App screen - Settings"/>
+<img src="images/Kivy_REST_Demo_List.jpg" width="135" alt="App screen - List"/>&nbsp;<img src="images/Kivy_REST_Demo_Login.jpg" width="135" alt="App screen - Login"/>&nbsp;<img src="images/Kivy_REST_Demo_Edit.jpg" width="135" alt="App screen - Edit"/>&nbsp;<img src="images/Kivy_REST_Demo_About.jpg" width="135" alt="App screen - About"/>&nbsp;<img src="images/Kivy_REST_Demo_Settings.jpg" width="135" alt="App screen - Settings"/>
 ### Android APK
 The APK for the most recent debug build can be downloaded from the [GitHub Workflow section](https://github.com/JennaSys/kivy_rest/actions/workflows/main.yml). Look for the artifacts from the most recent build.
