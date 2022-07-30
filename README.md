@@ -12,8 +12,9 @@ A [Kivy](https://kivy.org) based CRUD demo application that makes use of a full 
 ### Project Organization
 - All application code is in the _src/_ folder
 - Build files and folders are in the project root
-- Each screen consists of a _py_ file and a _kv_ file as a Python package located in the _src/View/_ folder
-- The Kivy screens are imported directly from the **View** package in [_mainapp.kv_](src/mainapp.kv) (where the ScreenManager is)
+- _[main.py](src/main.py)_ holds the Kivy App instance and the application menu.
+- Each view screen consists of a _py_ file and a _kv_ file as a Python package located in the _src/View/_ folder
+- The Kivy screens are all imported directly from the **View** package in [_mainapp.kv_](src/mainapp.kv) (where the ScreenManager is)
 - The [_apputils.py_](src/apputils.py) module has a few convenience functions for making REST API requests, loading kv files, and using the Snackbar (yes, it's a junk drawer, don't @ me)
 - The [_version_util.py_](version_util.py) module is just a simple but handy convenience utility for updating the project version on demand
 
