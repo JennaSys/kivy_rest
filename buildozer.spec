@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Kivy REST Demo
+title = Kivy REST API Demo
 
 # (str) Package name
 package.name = kivy_rest
