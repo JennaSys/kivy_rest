@@ -90,21 +90,35 @@ class MainApp(MDApp):
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
         KV_FILES = []
+
+        if self.sm is None:
+            current_screen = None
+        else:
+            current_screen = self.sm.current
+
         self.sm = SM()
+        if current_screen is not None:
+            self.sm.current = current_screen
+
         CLASSES = self.sm.get_classes()
 
         self.menu = AppMenu()
         self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="settings", text="Settings", icon="cog", on_release=self.open_settings)
         self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
-        self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
+
+        if self.session_cookie is None:
+            self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
+        else:
+            self.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.sm.get_screen('login').logout)
+
+        self.sm.get_screen('books').get_books()
 
         return self.sm
 
     def on_start(self):
         EventLoop.window.bind(on_keyboard=self.keyboard_hook)
         self.sm.get_screen('books').open()
-        self.sm.get_screen('books').get_books()
 
     def on_stop(self):
         Window.close()

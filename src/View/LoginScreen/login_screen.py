@@ -29,6 +29,7 @@ class LoginScreen(MDScreen):
 
         def on_success(request, result):
             Notify(text="Logged out").open()
+            app.sm.get_screen('books').set_auth()
             app.sm.get_screen('books').open()
 
         app = MDApp.get_running_app()
