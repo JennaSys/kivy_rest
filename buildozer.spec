@@ -4,10 +4,10 @@
 title = Kivy REST Demo
 
 # (str) Package name
-package.name = books
+package.name = kivy_rest
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.jennasys
+package.domain = com.jennasys
 
 # (str) Source code where the main.py live
 source.dir = ./src
