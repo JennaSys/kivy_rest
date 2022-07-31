@@ -1,8 +1,9 @@
 import os
 
 from kivy.base import EventLoop
-from kivy.uix.screenmanager import RiseInTransition, FallOutTransition, SlideTransition
-from kivymd.app import MDApp
+from kivy.uix.screenmanager import RiseInTransition, FallOutTransition, SlideTransition, ScreenManager
+# from kivymd.app import MDApp
+from kivymd.tools.hotreload.app import MDApp
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.core.window import Window
@@ -40,6 +41,11 @@ class MenuItem(OneLineIconListItem):
     icon = StringProperty()
 
 
+class SM(ScreenManager):
+    def get_classes(self):
+        return {screen.__class__.__name__: screen.__class__.__module__ for screen in self.screens}
+
+
 class MainApp(MDApp):
     use_kivy_settings = False
 
@@ -70,7 +76,7 @@ class MainApp(MDApp):
             if token == ('app', 'rest_endpoint'):
                 os.environ['REST_ENDPOINT'] = value
 
-    def build(self):
+    def build_app(self, *args):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
@@ -83,7 +89,9 @@ class MainApp(MDApp):
 
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
-        self.sm = self.root
+        KV_FILES = []
+        self.sm = SM()
+        CLASSES = self.sm.get_classes()
 
         self.menu = AppMenu()
         self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
@@ -91,10 +99,11 @@ class MainApp(MDApp):
         self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
         self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
 
-        self.sm.get_screen('books').open()
+        return self.sm
 
     def on_start(self):
         EventLoop.window.bind(on_keyboard=self.keyboard_hook)
+        self.sm.get_screen('books').open()
         self.sm.get_screen('books').get_books()
 
     def on_stop(self):

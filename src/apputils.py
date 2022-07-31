@@ -3,16 +3,18 @@ import json
 import os
 
 from kivy.core.window import Window
-from kivy.lang import Builder
+# from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.network.urlrequest import UrlRequest
 from kivymd.uix.snackbar import Snackbar
+from kivymd.app import MDApp
 
 URL_TIMEOUT = 5
 
 
 def load_kv(module_name):
-    Builder.load_file(f"{os.path.join(*module_name.split('.'))}.kv")
+    # Builder.load_file(f"{os.path.join(*module_name.split('.'))}.kv")
+    MDApp.get_running_app().KV_FILES.append(f"{os.path.join(*module_name.split('.'))}.kv")
 
 
 class Notify(Snackbar):
