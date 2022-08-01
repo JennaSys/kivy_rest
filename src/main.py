@@ -53,6 +53,7 @@ class MainApp(MDApp):
     sm = None
     menu = None
     session_cookie = None
+    state = {}
 
     def build_config(self, config):
         config.setdefaults('app', {'rest_endpoint': REST_ENDPOINT})
@@ -90,16 +91,25 @@ class MainApp(MDApp):
 
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
+        # Save state for hot reloading
+        if self.sm is None:
+            self.state = {'session': None,
+                          'current': None,
+                          'edit_id': None,
+                          'edit_title': '',
+                          'edit_author': '',
+                          }
+        else:
+            self.state = {'session': self.session_cookie,
+                          'current': self.sm.current,
+                          'edit_id': self.sm.get_screen('edit').book_id,
+                          'edit_title': self.sm.get_screen('edit').ids.title.text,
+                          'edit_author': self.sm.get_screen('edit').ids.author.text,
+                          }
+
         KV_FILES = []
 
-        if self.sm is None:
-            current_screen = None
-        else:
-            current_screen = self.sm.current
-
         self.sm = SM()
-        if current_screen is not None:
-            self.sm.current = current_screen
 
         CLASSES = self.sm.get_classes()
 
@@ -116,6 +126,15 @@ class MainApp(MDApp):
         self.sm.get_screen('books').get_books()
 
         return self.sm
+
+    def apply_state(self, state):
+        self.session_cookie = state['session']
+        self.sm.current = state['current']
+
+        if self.sm.current == 'edit':
+            self.sm.get_screen('edit').open(state['edit_id'])
+            self.sm.get_screen('edit').ids.title.text = state['edit_title']
+            self.sm.get_screen('edit').ids.author.text = state['edit_author']
 
     def on_start(self):
         EventLoop.window.bind(on_keyboard=self.keyboard_hook)
