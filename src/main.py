@@ -43,7 +43,8 @@ class MenuItem(OneLineIconListItem):
 
 class SM(ScreenManager):
     def get_classes(self):
-        return {screen.__class__.__name__: screen.__class__.__module__ for screen in self.screens}
+        return {screen.__class__.__name__: screen.__class__.__module__
+                for screen in self.screens}
 
 
 class MainApp(MDApp):
@@ -76,7 +77,7 @@ class MainApp(MDApp):
             if token == ('app', 'rest_endpoint'):
                 os.environ['REST_ENDPOINT'] = value
 
-    def build_app(self, *args):
+    def build_app(self, first=False):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
