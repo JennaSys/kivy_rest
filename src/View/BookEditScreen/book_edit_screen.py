@@ -22,6 +22,7 @@ class BookEdit(MDScreen):
                 field.cursor = (0, 0)
                 field.disabled = not authorized
 
+        self.ids.title.focus = True
         app.switch_screen('edit')
 
         self.book_id = book_id
