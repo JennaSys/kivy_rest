@@ -1,6 +1,5 @@
 import os
 
-from kivy.base import EventLoop
 from kivy.uix.screenmanager import RiseInTransition, FallOutTransition, SlideTransition, ScreenManager
 # from kivymd.app import MDApp
 from kivymd.tools.hotreload.app import MDApp
@@ -10,6 +9,9 @@ from kivy.core.window import Window
 from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.utils import platform
+
+if platform == 'android':
+    from android import mActivity
 
 REST_ENDPOINT = 'https://restdemo.jennasys.com/api'
 
@@ -86,6 +88,7 @@ class MainApp(MDApp):
         self.title = "Books"
         self.icon = 'images/icon.png'
 
+        Window.bind(on_keyboard=self.keyboard_hook)
         if platform in ['win', 'linux', 'macosx']:
             Window.size = (400, 600)
 
@@ -137,16 +140,16 @@ class MainApp(MDApp):
             self.sm.get_screen('edit').ids.author.text = state['edit_author']
 
     def on_start(self):
-        EventLoop.window.bind(on_keyboard=self.keyboard_hook)
         self.sm.get_screen('books').open()
-
-    def on_stop(self):
-        Window.close()
 
     def keyboard_hook(self, key, scancode, codepoint, modifier, *args):
         if scancode == 27:  # ESC
             if self.sm.current == 'books':
-                pass  # Exit App
+                if platform == 'android':
+                    mActivity.finishAndRemoveTask()
+                    return True
+                else:
+                    return False
             elif self.sm.current == 'edit':
                 self.sm.get_screen('edit').close()
                 return True
