@@ -1,10 +1,10 @@
 # Global UI layout dimensions
 #:import Window kivy.core.window.Window
 #:set screen_size (Window.size[0]**2 + Window.size[1]**2)**0.5
-#:set large_font screen_size * 0.04
-#:set normal_font screen_size * 0.02
-#:set rel_space screen_size * 0.01
-#:set list_space screen_size * 0.005
+#:set normal_font dp(18)
+#:set large_font normal_font * 2
+#:set rel_space normal_font / 2
+#:set list_space rel_space / 2
 #:set widget_elevation dp(8)
 
 #:import LoginScreen View.LoginScreen
