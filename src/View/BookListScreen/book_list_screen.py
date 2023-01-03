@@ -50,7 +50,10 @@ class BookList(MDScreen):
         app = MDApp.get_running_app()
         app.sm.get_screen('edit').open()
 
-    def open(self):
+    def on_enter(self):
+        Clock.schedule_once(self.set_auth)
+
+    def set_auth(self, dt=0):
         app = MDApp.get_running_app()
         authorized = app.is_auth()
         self.show_add_btn(authorized)
@@ -58,6 +61,8 @@ class BookList(MDScreen):
             if isinstance(book, Book):
                 book.ids.del_btn.disabled = not authorized
 
+    def open(self):
+        app = MDApp.get_running_app()
         app.switch_screen('books')
 
     def get_books(self):

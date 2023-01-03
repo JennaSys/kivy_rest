@@ -1,7 +1,8 @@
 import os
 
-from kivy.uix.screenmanager import RiseInTransition, FallOutTransition, SlideTransition
-from kivymd.app import MDApp
+from kivy.uix.screenmanager import RiseInTransition, FallOutTransition, SlideTransition, ScreenManager
+# from kivymd.app import MDApp
+from kivymd.tools.hotreload.app import MDApp
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.core.window import Window
@@ -42,12 +43,19 @@ class MenuItem(OneLineIconListItem):
     icon = StringProperty()
 
 
+class SM(ScreenManager):
+    def get_classes(self):
+        return {screen.__class__.__name__: screen.__class__.__module__
+                for screen in self.screens}
+
+
 class MainApp(MDApp):
     use_kivy_settings = False
 
     sm = None
     menu = None
     session_cookie = None
+    state = {}
 
     def build_config(self, config):
         config.setdefaults('app', {'rest_endpoint': REST_ENDPOINT})
@@ -72,7 +80,7 @@ class MainApp(MDApp):
             if token == ('app', 'rest_endpoint'):
                 os.environ['REST_ENDPOINT'] = value
 
-    def build(self):
+    def build_app(self, first=False):
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.accent_palette = "Pink"
@@ -86,15 +94,50 @@ class MainApp(MDApp):
 
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
 
-        self.sm = self.root
+        # Save state for hot reloading
+        if self.sm is None:
+            self.state = {'session': None,
+                          'current': None,
+                          'edit_id': None,
+                          'edit_title': '',
+                          'edit_author': '',
+                          }
+        else:
+            self.state = {'session': self.session_cookie,
+                          'current': self.sm.current,
+                          'edit_id': self.sm.get_screen('edit').book_id,
+                          'edit_title': self.sm.get_screen('edit').ids.title.text,
+                          'edit_author': self.sm.get_screen('edit').ids.author.text,
+                          }
+
+        KV_FILES = []
+
+        self.sm = SM()
+
+        CLASSES = self.sm.get_classes()
 
         self.menu = AppMenu()
         self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="settings", text="Settings", icon="cog", on_release=self.open_settings)
         self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
-        self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
+
+        if self.session_cookie is None:
+            self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
+        else:
+            self.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.sm.get_screen('login').logout)
 
         self.sm.get_screen('books').get_books()
+
+        return self.sm
+
+    def apply_state(self, state):
+        self.session_cookie = state['session']
+        self.sm.current = state['current']
+
+        if self.sm.current == 'edit':
+            self.sm.get_screen('edit').open(state['edit_id'])
+            self.sm.get_screen('edit').ids.title.text = state['edit_title']
+            self.sm.get_screen('edit').ids.author.text = state['edit_author']
 
     def on_start(self):
         self.sm.get_screen('books').open()
