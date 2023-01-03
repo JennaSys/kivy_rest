@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "kivy-resource"
+version = "0.1.0"
+description = "Hot-Reload KivyMD resource-based application"
+authors = ["Ernest Prabhakar <ernest@quiltdata.io>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "kivy_resource"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kivymd = "^1.1.1"
+
+[tool.poetry.group.dev.dependencies]
+watchdog = "^2.2.1"
+pytest-watch = "^4.2.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

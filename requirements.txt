@@ -1,5 +1,0 @@
-Kivy~=2.1.0
-kivymd @ https://github.com/kivymd/KivyMD/archive/master.zip
-Cython~=0.29.19
-buildozer~=1.4.0
-watchdog==2.1.9
