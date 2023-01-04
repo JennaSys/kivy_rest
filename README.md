@@ -5,6 +5,5 @@ A demo [KivyMD](https://kivymd.readthedocs.io/en/latest/) resource-based applica
 
 ```
 poetry install
-cd ./kivy_resource
-poetry run python3 main.py
+poetry run python3 kivy_resource/main.py
 ```

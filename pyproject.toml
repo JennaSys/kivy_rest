@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kivy-resource"
-version = "0.1.0"
+version = "0.1.1"
 description = "Hot-Reload KivyMD resource-based application"
 authors = ["Ernest Prabhakar <ernest@quiltdata.io>"]
 license = "MIT"
