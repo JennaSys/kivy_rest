@@ -5,7 +5,7 @@ from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty
 from kivymd.app import MDApp
 
-from apputils import fetch, Notify, load_kv
+from kivy_resource.apputils import fetch, Notify, load_kv
 
 load_kv(__name__)
 

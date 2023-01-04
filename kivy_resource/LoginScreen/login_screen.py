@@ -3,7 +3,7 @@ import os
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
-from apputils import load_kv, Notify, fetch
+from kivy_resource.apputils import load_kv, Notify, fetch
 
 load_kv(__name__)
 

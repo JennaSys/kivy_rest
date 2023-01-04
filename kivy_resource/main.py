@@ -59,6 +59,7 @@ class MainApp(MDApp):
 
     def build_config(self, config):
         config.setdefaults('app', {'rest_endpoint': REST_ENDPOINT})
+        self.config = config
 
     def build_settings(self, settings):
         jsondata = """ [{"type": "title",

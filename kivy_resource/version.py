@@ -1,1 +1,2 @@
-__version__ = "0.3.10"
+import pkg_resources
+__version__ = = pkg_resources.get_distribution('kivy_resource').version
