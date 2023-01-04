@@ -63,7 +63,7 @@ class MainApp(MDApp):
 
     def build_settings(self, settings):
         jsondata = """ [{"type": "title",
-                         "title": "Kivy REST Demo Settings"},
+                         "title": "KivyMD Hot-Reload Demo Resource-based Application"},
                         {"type": "string",
                          "title": "REST Endpoint",
                          "desc": "URL for REST API endpoint",
@@ -120,14 +120,14 @@ class MainApp(MDApp):
         self.menu = AppMenu()
         self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="settings", text="Settings", icon="cog", on_release=self.open_settings)
-        self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('books').get_books)
+        self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('list').get_list)
 
         if self.session_cookie is None:
             self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
         else:
             self.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.sm.get_screen('login').logout)
 
-        self.sm.get_screen('books').get_books()
+        self.sm.get_screen('list').get_list()
 
         return self.sm
 
@@ -141,11 +141,11 @@ class MainApp(MDApp):
             self.sm.get_screen('edit').ids.author.text = state['edit_author']
 
     def on_start(self):
-        self.sm.get_screen('books').open()
+        self.sm.get_screen('list').open()
 
     def keyboard_hook(self, key, scancode, codepoint, modifier, *args):
         if scancode == 27:  # ESC
-            if self.sm.current == 'books':
+            if self.sm.current == 'list':
                 if platform == 'android':
                     mActivity.finishAndRemoveTask()
                     return True
@@ -155,10 +155,10 @@ class MainApp(MDApp):
                 self.sm.get_screen('edit').close()
                 return True
             else:
-                self.sm.get_screen('books').open()
+                self.sm.get_screen('list').open()
                 return True
 
-    def switch_screen(self, screen_name='books'):
+    def switch_screen(self, screen_name='list'):
         self.menu.dismiss()
         if screen_name == 'login':
             self.sm.transition = RiseInTransition()

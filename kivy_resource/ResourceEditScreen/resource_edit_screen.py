@@ -33,7 +33,7 @@ class ResourceEdit(MDScreen):
     def close(self, ref=None):
         self.clear()
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').open()
+        app.sm.get_screen('list').open()
 
     def load_data(self, request, result):
         resource_data = result.get('book', None)
@@ -58,8 +58,8 @@ class ResourceEdit(MDScreen):
         Notify(text=f"Resource {'added' if self.resource_id is None else 'updated'}").open()
         self.clear()
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').get_books()
-        app.sm.get_screen('books').open()
+        app.sm.get_screen('list').get_list()
+        app.sm.get_screen('list').open()
 
     def clear(self):
         self.resource_id = None

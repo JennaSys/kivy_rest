@@ -63,15 +63,15 @@ class ResourceList(MDScreen):
 
     def open(self):
         app = MDApp.get_running_app()
-        app.switch_screen('books')
+        app.switch_screen('list')
 
-    def get_books(self):
+    def get_list(self):
         app = MDApp.get_running_app()
         app.menu.dismiss()
 
         @mainthread
         def _load_data(request, result):
-            resource_data = result.get('books', None)
+            resource_data = result.get('list', None)
             if resource_data:
                 authorized = app.is_auth()
                 for book in resource_data:
@@ -90,13 +90,13 @@ class ResourceList(MDScreen):
         def _on_error(*args):
             self.ids.loading.active = False
 
-        def _get_books():
+        def _get_list():
             Clock.schedule_once(lambda dt: _clear_data(), 0)
 
             rest_endpoint = os.environ['REST_ENDPOINT']
             fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
 
-        threading.Thread(target=_get_books).start()
+        threading.Thread(target=_get_list).start()
 
 
 class Resource(MDCardSwipe):
@@ -121,7 +121,7 @@ class Resource(MDCardSwipe):
     def delete_success(request, result):
         Notify(text="Resource deleted").open()
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').get_books()
+        app.sm.get_screen('list').get_list()
 
     def handle_delete(self):
         if self.open_progress > 0.0:

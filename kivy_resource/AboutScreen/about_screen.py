@@ -15,4 +15,4 @@ class AboutScreen(MDScreen):
     @staticmethod
     def close(ref=None):
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').open()
+        app.sm.get_screen('list').open()

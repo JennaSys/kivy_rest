@@ -17,7 +17,7 @@ class LoginScreen(MDScreen):
     def close(self):
         self.clear()
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').open()
+        app.sm.get_screen('list').open()
 
     def clear(self):
         self.ids.username.text = ""
@@ -29,8 +29,8 @@ class LoginScreen(MDScreen):
 
         def on_success(request, result):
             Notify(text="Logged out").open()
-            app.sm.get_screen('books').set_auth()
-            app.sm.get_screen('books').open()
+            app.sm.get_screen('list').set_auth()
+            app.sm.get_screen('list').open()
 
         app = MDApp.get_running_app()
         rest_endpoint = os.environ['REST_ENDPOINT']
@@ -55,7 +55,7 @@ class LoginScreen(MDScreen):
         app = MDApp.get_running_app()
         app.session_cookie = request.resp_headers.get('Set-Cookie', None)
         Notify(text="Login successful!").open()
-        app.sm.get_screen('books').open()
+        app.sm.get_screen('list').open()
 
         app.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.logout)
         app.menu.remove_item('login')
