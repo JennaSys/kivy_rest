@@ -63,7 +63,7 @@ class ResourceList(MDScreen):
 
     def open(self):
         app = MDApp.get_running_app()
-        app.switch_screen('books')
+        app.switch_screen('resources')
 
     def get_books(self):
         app = MDApp.get_running_app()
@@ -121,7 +121,7 @@ class Resource(MDCardSwipe):
     def delete_success(request, result):
         Notify(text="Resource deleted").open()
         app = MDApp.get_running_app()
-        app.sm.get_screen('books').get_books()
+        app.sm.get_screen('resources').get_books()
 
     def handle_delete(self):
         if self.open_progress > 0.0:
