@@ -40,7 +40,7 @@ class ConfirmDialog(MDDialog):
         super().__init__(**kwargs)
 
 
-class BookList(MDScreen):
+class ResourceList(MDScreen):
     def show_add_btn(self, show=True):
         self.ids.add_btn.disabled = not show
         self.ids.add_btn.opacity = 1.0 if show else 0
@@ -58,7 +58,7 @@ class BookList(MDScreen):
         authorized = app.is_auth()
         self.show_add_btn(authorized)
         for book in self.ids.booklist.children:
-            if isinstance(book, Book):
+            if isinstance(book, Resource):
                 book.ids.del_btn.disabled = not authorized
 
     def open(self):
@@ -71,11 +71,11 @@ class BookList(MDScreen):
 
         @mainthread
         def _load_data(request, result):
-            book_data = result.get('books', None)
-            if book_data:
+            resource_data = result.get('books', None)
+            if resource_data:
                 authorized = app.is_auth()
-                for book in book_data:
-                    new_book = Book(book_id=book['id'], text=book['title'], secondary_text=book['author'])
+                for book in resource_data:
+                    new_book = Resource(resource_id=book['id'], text=book['title'], secondary_text=book['author'])
                     new_book.ids.del_btn.disabled = not authorized
                     self.ids.booklist.add_widget(new_book)
 
@@ -99,14 +99,14 @@ class BookList(MDScreen):
         threading.Thread(target=_get_books).start()
 
 
-class Book(MDCardSwipe):
-    book_id = NumericProperty()
+class Resource(MDCardSwipe):
+    resource_id = NumericProperty()
     text = StringProperty()
     secondary_text = StringProperty()
 
     def __init__(self, **kw):
         super().__init__(**kw)
-        self.dialog = ConfirmDialog(title="Delete Book",
+        self.dialog = ConfirmDialog(title="Delete Resource",
                                     text=f"Are you sure you want to permanently delete '{self.text}'?",
                                     on_ok=self.do_delete)
 
@@ -115,11 +115,11 @@ class Book(MDCardSwipe):
         app = MDApp.get_running_app()
         REST_ENDPOINT = os.environ['REST_ENDPOINT']
 
-        fetch(f"{REST_ENDPOINT}/books/{self.book_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
+        fetch(f"{REST_ENDPOINT}/books/{self.resource_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
 
     @staticmethod
     def delete_success(request, result):
-        Notify(text="Book deleted").open()
+        Notify(text="Resource deleted").open()
         app = MDApp.get_running_app()
         app.sm.get_screen('books').get_books()
 
@@ -127,7 +127,7 @@ class Book(MDCardSwipe):
         if self.open_progress > 0.0:
             self.dialog.open()
 
-    def handle_edit(self, book_id):
+    def handle_edit(self, resource_id):
         if self.open_progress == 0.0:
             app = MDApp.get_running_app()
-            app.sm.get_screen('edit').open(book_id)
+            app.sm.get_screen('edit').open(resource_id)

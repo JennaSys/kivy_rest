@@ -1,10 +1,10 @@
-<BookField@MDTextField>:
+<ResourceField@MDTextField>:
     font_size: normal_font
     write_tab: False
     multiline: False
 
 
-<BookEdit>:
+<ResourceEdit>:
     MDBoxLayout:
         orientation: "vertical"
         md_bg_color: app.theme_cls.bg_dark
@@ -13,7 +13,7 @@
         MDTopAppBar:
             id: app_toolbar
             elevation: widget_elevation
-            title: f"Edit Book ({'New' if root.book_id is None else str(root.book_id)})"
+            title: f"Edit Resource ({'New' if root.resource_id is None else str(root.resource_id)})"
             anchor_title: "left"
             right_action_items: [["close", root.close]]
 
@@ -23,13 +23,13 @@
             padding: [rel_space]
             spacing: rel_space
 
-            BookField:
+            ResourceField:
                 id: title
-                hint_text: "Book Title"
+                hint_text: "Resource Title"
 
-            BookField:
+            ResourceField:
                 id: author
-                hint_text: "Book Author"
+                hint_text: "Resource Author"
 
             MDFillRoundFlatButton:
                 id: save_edit
