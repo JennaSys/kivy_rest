@@ -58,7 +58,7 @@ class ResourceEdit(MDScreen):
         Notify(text=f"Resource {'added' if self.resource_id is None else 'updated'}").open()
         self.clear()
         app = MDApp.get_running_app()
-        app.sm.get_screen('resources').get_books()
+        app.sm.get_screen('resources').list_resources()
         app.sm.get_screen('resources').open()
 
     def clear(self):

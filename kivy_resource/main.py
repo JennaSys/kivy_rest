@@ -120,14 +120,14 @@ class MainApp(MDApp):
         self.menu = AppMenu()
         self.menu.add_item(id="about", text="About", icon="information", on_release=self.sm.get_screen('about').open)
         self.menu.add_item(id="settings", text="Settings", icon="cog", on_release=self.open_settings)
-        self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('resources').get_books)
+        self.menu.add_item(id="refresh", text="Refresh", icon="reload", on_release=self.sm.get_screen('resources').list_resources)
 
         if self.session_cookie is None:
             self.menu.add_item(id="login", text="Login", icon="login", on_release=self.sm.get_screen('login').open)
         else:
             self.menu.add_item(id="logout", text="Logout", icon="logout", on_release=self.sm.get_screen('login').logout)
 
-        self.sm.get_screen('resources').get_books()
+        self.sm.get_screen('resources').list_resources()
 
         return self.sm
 
