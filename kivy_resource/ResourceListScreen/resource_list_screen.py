@@ -57,7 +57,7 @@ class ResourceList(MDScreen):
         app = MDApp.get_running_app()
         authorized = app.is_auth()
         self.show_add_btn(authorized)
-        for book in self.ids.booklist.children:
+        for book in self.ids.resourcelist.children:
             if isinstance(book, Resource):
                 book.ids.del_btn.disabled = not authorized
 
@@ -77,14 +77,14 @@ class ResourceList(MDScreen):
                 for book in resource_data:
                     new_book = Resource(resource_id=book['id'], text=book['title'], secondary_text=book['author'])
                     new_book.ids.del_btn.disabled = not authorized
-                    self.ids.booklist.add_widget(new_book)
+                    self.ids.resourcelist.add_widget(new_book)
 
             self.ids.loading.active = False
 
         @mainthread
         def _clear_data():
             self.ids.loading.active = True
-            self.ids.booklist.clear_widgets()
+            self.ids.resourcelist.clear_widgets()
 
         @mainthread
         def _on_error(*args):
