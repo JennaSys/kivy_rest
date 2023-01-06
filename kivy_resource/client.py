@@ -4,8 +4,10 @@ from kivymd.app import MDApp
 
 class RestClient():
 
-    def BookClient():
-        return RestClient("books", ['title','author'])
+    def Default():
+        resource = os.environ['REST_RESOURCE']
+        keys = os.environ['REST_KEYS'].split(',')
+        return RestClient(resource, keys)
 
     def __init__(self, resource, id_keys):
         self.resource = resource
@@ -63,5 +65,3 @@ class RestClient():
             'cookie': app.session_cookie,
         } | options
         return fetch(url, callback, **params)
-
-BOOKS = RestClient.BookClient()

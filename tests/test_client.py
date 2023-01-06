@@ -24,13 +24,13 @@ def no_callback():
 	assert False
 
 def test_client():
-	client = RestClient.BookClient()
+	client = RestClient.Default()
 	assert client
 	assert client.keys
 	assert client.keys[0] == 'title'
 
 def test_client_extract():
-	client = RestClient.BookClient()
+	client = RestClient.Default()
 	book = client.ids_text(BOOK_IDS)
 	book['id'] = 1
 	fields = client.extract(book)

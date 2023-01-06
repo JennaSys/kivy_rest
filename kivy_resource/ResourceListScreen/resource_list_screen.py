@@ -10,7 +10,7 @@ from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty, StringProperty
 
 from kivy_resource.apputils import Notify, load_kv
-from kivy_resource.client import BOOKS
+from kivy_resource.client import RestClient
 
 
 load_kv(__name__)
@@ -76,7 +76,7 @@ class ResourceList(MDScreen):
             if resource_data:
                 authorized = app.is_auth()
                 for data in resource_data:
-                    fields = BOOKS.extract(data)
+                    fields = RestClient.Default().extract(data)
                     new_book = Resource(**fields)
                     new_book.ids.del_btn.disabled = not authorized
                     self.ids.resourcelist.add_widget(new_book)
@@ -96,7 +96,7 @@ class ResourceList(MDScreen):
             Clock.schedule_once(lambda dt: _clear_data(), 0)
 
             rest_endpoint = os.environ['REST_ENDPOINT']
-            BOOKS.get(_load_data, on_error=_on_error)
+            RestClient.Default().get(_load_data, on_error=_on_error)
 
         threading.Thread(target=_list_resources).start()
 
@@ -114,7 +114,7 @@ class Resource(MDCardSwipe):
 
     def do_delete(self):
         self.dialog.dismiss()
-        BOOKS.delete(self.delete_success, self.resource_id)
+        RestClient.Default().delete(self.delete_success, self.resource_id)
 
     @staticmethod
     def delete_success(request, result):

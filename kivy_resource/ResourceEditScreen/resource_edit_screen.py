@@ -6,7 +6,7 @@ from kivy.properties import NumericProperty
 from kivymd.app import MDApp
 
 from kivy_resource.apputils import Notify, load_kv
-from kivy_resource.client import BOOKS
+from kivy_resource.client import RestClient
 
 load_kv(__name__)
 
@@ -30,7 +30,7 @@ class ResourceEdit(MDScreen):
         self.resource_id = resource_id
         if resource_id is not None:
             rest_endpoint = os.environ['REST_ENDPOINT']
-            BOOKS.get(self.load_data, resource_id)
+            RestClient.Default().get(self.load_data, resource_id)
 
     def close(self, ref=None):
         self.clear()
@@ -48,8 +48,8 @@ class ResourceEdit(MDScreen):
         body = {'title': self.ids.title.text, 'author': self.ids.author.text}
         if self.resource_id is not None:
             body['id'] = self.resource_id
-            return BOOKS.put(self.save_success, body)
-        return BOOKS.post(self.save_success, body)
+            return RestClient.Default().put(self.save_success, body)
+        return RestClient.Default().post(self.save_success, body)
 
     def save_success(self, request, result):
         Notify(text=f"Resource {'added' if self.resource_id is None else 'updated'}").open()

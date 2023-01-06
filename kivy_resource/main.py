@@ -14,7 +14,8 @@ if platform == 'android':
     from android import mActivity
 
 REST_ENDPOINT = 'https://restdemo.jennasys.com/api'
-
+REST_RESOURCE = 'books'
+REST_KEYS = 'title,author'
 
 class AppMenu(MDDropdownMenu):
     def __init__(self):
@@ -58,7 +59,11 @@ class MainApp(MDApp):
     state = {}
 
     def build_config(self, config):
-        config.setdefaults('app', {'rest_endpoint': REST_ENDPOINT})
+        config.setdefaults('app', {
+            'rest_endpoint': REST_ENDPOINT,
+            'rest_resource': REST_RESOURCE,
+            'rest_keys': REST_KEYS,
+        })
         self.config = config
 
     def build_settings(self, settings):
@@ -68,7 +73,18 @@ class MainApp(MDApp):
                          "title": "REST Endpoint",
                          "desc": "URL for REST API endpoint",
                          "section": "app",
-                         "key": "rest_endpoint"}] """
+                         "key": "rest_endpoint"},
+                        {"type": "string",
+                         "title": "REST Resource",
+                         "desc": "Resource for REST routing",
+                         "section": "app",
+                         "key": "rest_resource"},
+                        {"type": "string",
+                         "title": "REST Keys",
+                         "desc": "Keys for Resource Fields",
+                         "section": "app",
+                         "key": "rest_keys"}
+                        ] """
         settings.add_json_panel('REST Demo', self.config, data=jsondata)
 
     def open_settings(self, *largs):
@@ -80,6 +96,10 @@ class MainApp(MDApp):
             token = (section, key)
             if token == ('app', 'rest_endpoint'):
                 os.environ['REST_ENDPOINT'] = value
+            elif token == ('app', 'rest_endpoint'):
+                os.environ['REST_RESOURCE'] = value
+            elif token == ('app', 'rest_keys'):
+                os.environ['REST_KEYS'] = value
 
     def build_app(self, first=False):
         self.theme_cls.theme_style = "Light"
@@ -91,9 +111,11 @@ class MainApp(MDApp):
 
         Window.bind(on_keyboard=self.keyboard_hook)
         if platform in ['win', 'linux', 'macosx']:
-            Window.size = (400, 600)
+            Window.size = (800, 600)
 
         os.environ['REST_ENDPOINT'] = self.config.get('app', 'rest_endpoint')
+        os.environ['REST_RESOURCE'] = self.config.get('app', 'rest_resource')
+        os.environ['REST_KEYS'] = self.config.get('app', 'rest_keys')
 
         # Save state for hot reloading
         if self.sm is None:
