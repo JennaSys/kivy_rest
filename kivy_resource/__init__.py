@@ -4,5 +4,5 @@ from kivy_resource.ResourceEditScreen.resource_edit_screen import ResourceEdit
 from kivy_resource.ResourceListScreen.resource_list_screen import Resource
 from kivy_resource.ResourceListScreen.resource_list_screen import ResourceList
 from .apputils import load_kv, Notify, fetch
-from .client import RestClient
+from .client import RestClient, BOOKS
 from .main import MainApp

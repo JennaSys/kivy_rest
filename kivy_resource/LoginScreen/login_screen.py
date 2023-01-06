@@ -4,6 +4,7 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from kivy_resource.apputils import load_kv, Notify, fetch
+from kivy_resource.client import BOOKS
 
 load_kv(__name__)
 
@@ -34,7 +35,7 @@ class LoginScreen(MDScreen):
 
         app = MDApp.get_running_app()
         rest_endpoint = os.environ['REST_ENDPOINT']
-        fetch(f"{rest_endpoint}/logout", on_success, cookie=app.session_cookie)
+        BOOKS.logout(on_success)
 
         app.session_cookie = None
 
@@ -45,10 +46,7 @@ class LoginScreen(MDScreen):
         def login_error(request, result):
             Notify(text="Login failed!", snack_type='error').open()
 
-        body = {'username': self.ids.username.text, 'password': self.ids.password.text}
-        rest_endpoint = os.environ['REST_ENDPOINT']
-        fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, on_error=login_error)
-
+        BOOKS.login(self.login_success, self.ids.username.text, self.ids.password.text)
         self.clear()
 
     def login_success(self, request, result):

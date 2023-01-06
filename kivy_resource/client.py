@@ -11,6 +11,13 @@ class RestClient():
         self.resource = resource
         self.keys = id_keys # Name Detail
 
+    def extract(self, data):
+        FIELDS = ['text','secondary_text', 'resource_id']
+        values = [data[k] for k in self.keys]
+        fields = dict(zip(FIELDS, values))
+        fields[FIELDS[2]] = data['id']
+        return fields
+
     def ids_text(self, ids):
         return {k: ids[k].text for k in self.keys}
 
@@ -37,7 +44,7 @@ class RestClient():
         return self.call('POST', url, callback, options)
 
     def put(self, callback, ids, resource_id, **kwargs):
-        options = self.ids_text(ids)  | kwargs
+        options = self.ids_text(ids) | kwargs
         options['id'] = resource_id
         url = f"{self.resource}/{resource_id}"
         return self.call('PUT', url, callback, options)
@@ -57,3 +64,4 @@ class RestClient():
         } | options
         return fetch(url, callback, **params)
 
+BOOKS = RestClient.BookClient()

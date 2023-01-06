@@ -18,7 +18,7 @@ class MockClient(RestClient):
 class MockWidget:
     text: str
 
-BOOK_IDS = {'title':MockWidget("Moby"),'author':MockWidget("Melville")}
+BOOK_IDS = { 'title':MockWidget("Moby"),'author':MockWidget("Melville") }
 
 def no_callback():
 	assert False
@@ -28,6 +28,16 @@ def test_client():
 	assert client
 	assert client.keys
 	assert client.keys[0] == 'title'
+
+def test_client_extract():
+	client = RestClient.BookClient()
+	book = client.ids_text(BOOK_IDS)
+	book['id'] = 1
+	fields = client.extract(book)
+	assert fields['resource_id'] == 1
+	assert fields.get('text') == book['title']
+	assert fields.get('secondary_text') == book['author']
+
 
 def test_mock():
 	mock = MockClient('PUT', '/')
@@ -43,20 +53,19 @@ def test_ids_text():
 	result = mock.post(no_callback, ids)
 	assert result.get('a') == 'b'
 
-
-#     fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, on_error=lambda rq, rp: False)
+# fetch(f"{rest_endpoint}/ping", callback, cookie=cookie, on_error=lambda rq, rp: False)
 def test_ping():
 	mock = MockClient('GET', 'ping')
 	result = mock.ping(no_callback)
 
-#     fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, on_error=login_error)
+# fetch(f"{rest_endpoint}/login", self.login_success, method='POST', data=body, on_error=login_error)
 def test_login():
 	mock = MockClient('POST', 'login')
 	result = mock.login(no_callback, 'user', 'pw')
 	assert result.get('username') == 'user'
 	assert result.get('password') == 'pw'
 
-#         fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
+# fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
 def test_get_all():
 	mock = MockClient('GET', 'books')
 	result = mock.get(no_callback)
@@ -65,7 +74,7 @@ def test_get_one():
 	mock = MockClient('GET', 'books/1')
 	result = mock.get(no_callback, 1)
 
-#         fetch(f"{rest_endpoint}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
+# fetch(f"{rest_endpoint}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
 def test_post():
 	mock = MockClient('POST', 'books', ['title','author'])
 	result = mock.post(no_callback, BOOK_IDS)
@@ -78,7 +87,7 @@ def test_put():
 	assert result.get('title') == 'Moby'
 	assert result.get('author') == 'Melville'
 
-#         fetch(f"{REST_ENDPOINT}/books/{self.resource_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
+# fetch(f"{REST_ENDPOINT}/books/{self.resource_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
 def test_delete():
 	mock = MockClient('DELETE', 'books/1')
 	mock.delete(no_callback, 1)

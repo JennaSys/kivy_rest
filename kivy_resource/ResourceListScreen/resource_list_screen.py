@@ -9,12 +9,11 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty, StringProperty
 
-from kivy_resource.apputils import fetch, Notify, load_kv
-from kivy_resource.client import RestClient
+from kivy_resource.apputils import Notify, load_kv
+from kivy_resource.client import BOOKS
 
 
 load_kv(__name__)
-CLIENT = RestClient.BookClient()
 
 class ConfirmDialog(MDDialog):
     def __init__(self, title, text="", on_ok=None):
@@ -76,8 +75,9 @@ class ResourceList(MDScreen):
             resource_data = result.get('books', None)
             if resource_data:
                 authorized = app.is_auth()
-                for book in resource_data:
-                    new_book = Resource(resource_id=book['id'], text=book['title'], secondary_text=book['author'])
+                for data in resource_data:
+                    fields = BOOKS.extract(data)
+                    new_book = Resource(**fields)
                     new_book.ids.del_btn.disabled = not authorized
                     self.ids.resourcelist.add_widget(new_book)
 
@@ -96,8 +96,7 @@ class ResourceList(MDScreen):
             Clock.schedule_once(lambda dt: _clear_data(), 0)
 
             rest_endpoint = os.environ['REST_ENDPOINT']
-            #fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
-            CLIENT.get(_load_data, on_error=_on_error)
+            BOOKS.get(_load_data, on_error=_on_error)
 
         threading.Thread(target=_list_resources).start()
 
@@ -115,10 +114,7 @@ class Resource(MDCardSwipe):
 
     def do_delete(self):
         self.dialog.dismiss()
-        app = MDApp.get_running_app()
-        REST_ENDPOINT = os.environ['REST_ENDPOINT']
-
-        fetch(f"{REST_ENDPOINT}/books/{self.resource_id}", self.delete_success, method='DELETE', cookie=app.session_cookie)
+        BOOKS.delete(self.delete_success, self.resource_id)
 
     @staticmethod
     def delete_success(request, result):

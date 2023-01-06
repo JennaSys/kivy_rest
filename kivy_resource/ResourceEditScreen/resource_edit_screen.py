@@ -5,13 +5,15 @@ from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty
 from kivymd.app import MDApp
 
-from kivy_resource.apputils import fetch, Notify, load_kv
+from kivy_resource.apputils import Notify, load_kv
+from kivy_resource.client import BOOKS
 
 load_kv(__name__)
 
 
 class ResourceEdit(MDScreen):
     resource_id = NumericProperty(None, allownone=True)
+
 
     def open(self, resource_id=None):
         app = MDApp.get_running_app()
@@ -28,7 +30,7 @@ class ResourceEdit(MDScreen):
         self.resource_id = resource_id
         if resource_id is not None:
             rest_endpoint = os.environ['REST_ENDPOINT']
-            fetch(f"{rest_endpoint}/books/{resource_id}", self.load_data)
+            BOOKS.get(self.load_data, resource_id)
 
     def close(self, ref=None):
         self.clear()
@@ -46,13 +48,8 @@ class ResourceEdit(MDScreen):
         body = {'title': self.ids.title.text, 'author': self.ids.author.text}
         if self.resource_id is not None:
             body['id'] = self.resource_id
-
-        rest_resource = "books" if self.resource_id is None else f"books/{self.resource_id}"
-        method = 'POST' if self.resource_id is None else 'PUT'
-        app = MDApp.get_running_app()
-        rest_endpoint = os.environ['REST_ENDPOINT']
-
-        fetch(f"{rest_endpoint}/{rest_resource}", self.save_success, method=method, data=body, cookie=app.session_cookie)
+            return BOOKS.put(self.save_success, body)
+        return BOOKS.post(self.save_success, body)
 
     def save_success(self, request, result):
         Notify(text=f"Resource {'added' if self.resource_id is None else 'updated'}").open()
