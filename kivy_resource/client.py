@@ -4,6 +4,9 @@ from kivymd.app import MDApp
 
 class RestClient():
 
+    def BookClient():
+        return RestClient("books", ['title','author'])
+
     def __init__(self, resource, id_keys):
         self.resource = resource
         self.keys = id_keys # Name Detail
@@ -16,41 +19,41 @@ class RestClient():
         return self.call('GET', url, callback)
 
     def login(self, callback, username, password):
-        body = {'username': username, 'password': password}
+        options = {'username': username, 'password': password}
         url = 'login'
-        return self.call('POST', url, callback, body)
+        return self.call('POST', url, callback, options)
 
     def logout(self, callback):
         url = 'logout'
         return self.call('POST', url, callback)
 
-    def get(self, callback, resource_id=None):
+    def get(self, callback, resource_id=None, **kwargs):
         url = f"{self.resource}/{resource_id}" if resource_id else self.resource 
-        return self.call('GET', url, callback)
+        return self.call('GET', url, callback, kwargs)
 
-    def post(self, callback, ids):
-        body = self.ids_text(ids)
+    def post(self, callback, ids,**kwargs):
+        options = self.ids_text(ids) | kwargs
         url = self.resource
-        return self.call('POST', url, callback, body)
+        return self.call('POST', url, callback, options)
 
-    def put(self, callback, ids, resource_id):
-        body = self.ids_text(ids)
-        body['id'] = resource_id
+    def put(self, callback, ids, resource_id, **kwargs):
+        options = self.ids_text(ids)  | kwargs
+        options['id'] = resource_id
         url = f"{self.resource}/{resource_id}"
-        return self.call('PUT', url, callback, body)
+        return self.call('PUT', url, callback, options)
 
-    def delete(self, callback, resource_id):
+    def delete(self, callback, resource_id, **kwargs):
         url = f"{self.resource}/{resource_id}"
         return self.call('DELETE', url, callback)
 
-    def call(self, method, route, callback, body=None):
+    def call(self, method, route, callback, options=None):
         endpoint = os.environ['REST_ENDPOINT']
         app = MDApp.get_running_app()
         url = f"{endpoint}/{route}"
-        options = {
+        params = {
             'method': method,
-            'body': body,
+            'options': options,
             'cookie': app.session_cookie,
-        }
-        return fetch(url, callback, **options)
+        } | options
+        return fetch(url, callback, **params)
 

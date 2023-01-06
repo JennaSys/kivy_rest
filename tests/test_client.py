@@ -24,8 +24,10 @@ def no_callback():
 	assert False
 
 def test_client():
-	client = RestClient("books", [])
+	client = RestClient.BookClient()
 	assert client
+	assert client.keys
+	assert client.keys[0] == 'title'
 
 def test_mock():
 	mock = MockClient('PUT', '/')

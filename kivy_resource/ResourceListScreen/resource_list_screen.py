@@ -10,9 +10,11 @@ from kivymd.uix.screen import MDScreen
 from kivy.properties import NumericProperty, StringProperty
 
 from kivy_resource.apputils import fetch, Notify, load_kv
+from kivy_resource.client import RestClient
+
 
 load_kv(__name__)
-
+CLIENT = RestClient.BookClient()
 
 class ConfirmDialog(MDDialog):
     def __init__(self, title, text="", on_ok=None):
@@ -94,7 +96,8 @@ class ResourceList(MDScreen):
             Clock.schedule_once(lambda dt: _clear_data(), 0)
 
             rest_endpoint = os.environ['REST_ENDPOINT']
-            fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
+            #fetch(f"{rest_endpoint}/books", _load_data, on_error=_on_error)
+            CLIENT.get(_load_data, on_error=_on_error)
 
         threading.Thread(target=_list_resources).start()
 
