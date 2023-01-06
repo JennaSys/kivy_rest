@@ -1,4 +1,3 @@
-from kivy_resource.main import MainApp
 from .conftest import *
 
 from kivy.config import Config

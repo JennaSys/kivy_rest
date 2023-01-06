@@ -1,0 +1,1 @@
+from kivy_resource import *

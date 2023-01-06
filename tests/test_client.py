@@ -1,6 +1,5 @@
 from .conftest import *
 from dataclasses import dataclass
-from kivy_resource.client import RestClient
 
 class MockClient(RestClient):
     def __init__(self, method, route, keys=[]):
