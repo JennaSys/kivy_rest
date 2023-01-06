@@ -1,4 +1,6 @@
+import os
 from kivy_resource.apputils import fetch
+from kivymd.app import MDApp
 
 class RestClient():
 
@@ -22,6 +24,10 @@ class RestClient():
         url = 'logout'
         return self.call('POST', url, callback)
 
+    def get(self, callback, resource_id=None):
+        url = f"{self.resource}/{resource_id}" if resource_id else self.resource 
+        return self.call('GET', url, callback)
+
     def post(self, callback, ids):
         body = self.ids_text(ids)
         url = self.resource
@@ -44,7 +50,7 @@ class RestClient():
         options = {
             'method': method,
             'body': body,
-            'cookie': self.app.session_cookie,
+            'cookie': app.session_cookie,
         }
         return fetch(url, callback, **options)
 
